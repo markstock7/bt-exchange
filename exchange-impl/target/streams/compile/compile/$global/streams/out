@@ -1,0 +1,10 @@
+[0m[[0m[31merror[0m] [0m[0m/Users/markstock/Public/Projects/BlockTrending/bt-dataserver-exchange/exchange-impl/src/main/scala/org/bt/exchange/impl/ExchangeServiceImpl.scala:13:7: class ExchangeServiceImpl needs to be abstract, since:[0m
+[0m[[0m[31merror[0m] [0m[0mit has 2 unimplemented members.[0m
+[0m[[0m[31merror[0m] [0m[0m/** As seen from class ExchangeServiceImpl, the missing signatures are as follows.[0m
+[0m[[0m[31merror[0m] [0m[0m *  For convenience, these are usable as stub implementations.[0m
+[0m[[0m[31merror[0m] [0m[0m */[0m
+[0m[[0m[31merror[0m] [0m[0m  def candles: com.lightbend.lagom.scaladsl.api.ServiceCall[akka.NotUsed,akka.Done] = ???[0m
+[0m[[0m[31merror[0m] [0m[0m  def exchanges: com.lightbend.lagom.scaladsl.api.ServiceCall[akka.NotUsed,akka.Done] = ???[0m
+[0m[[0m[31merror[0m] [0m[0mclass ExchangeServiceImpl(persistentEntityRegistry: PersistentEntityRegistry) extends ExchangeService {[0m
+[0m[[0m[31merror[0m] [0m[0m      ^[0m
+[0m[[0m[31merror[0m] [0m[0mone error found[0m

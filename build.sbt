@@ -8,7 +8,14 @@ val macwire = "com.softwaremill.macwire" %% "macros" % "2.3.0" % "provided"
 val scalaTest = "org.scalatest" %% "scalatest" % "3.0.4" % Test
 
 lazy val `exchange` = (project in file("."))
-  .aggregate(`exchange-api`, `exchange-impl`, `exchange-stream-api`, `exchange-stream-impl`)
+  .aggregate(
+    `exchange-api`,
+    `exchange-impl`,
+    `exchange-stream-api`,
+    `exchange-stream-impl`,
+    `exchange-base`,
+    `exchange-binance`
+  )
 
 lazy val `exchange-api` = (project in file("exchange-api"))
   .settings(
@@ -29,7 +36,7 @@ lazy val `exchange-impl` = (project in file("exchange-impl"))
     )
   )
   .settings(lagomForkedTestSettings: _*)
-  .dependsOn(`exchange-api`)
+  .dependsOn(`exchange-api`, `exchange-binance`)
 
 lazy val `exchange-stream-api` = (project in file("exchange-stream-api"))
   .settings(
@@ -48,3 +55,20 @@ lazy val `exchange-stream-impl` = (project in file("exchange-stream-impl"))
     )
   )
   .dependsOn(`exchange-stream-api`, `exchange-api`)
+
+lazy val `exchange-base` = (project in file("exchange-base"))
+  .settings(
+    libraryDependencies ++= Seq(
+      "com.squareup.retrofit2" % "retrofit" % "2.3.0"
+    ) ++ Seq("core", "generic", "parser").map(s => "io.circe" %% s"circe-$s" % "0.9.0")
+  )
+
+lazy val `exchange-binance` = (project in file("exchange-binance"))
+  .settings(
+    libraryDependencies ++= Seq(
+      "com.squareup.retrofit2" % "retrofit" % "2.3.0"
+    ) ++ Seq("core", "generic", "parser").map(s => "io.circe" %% s"circe-$s" % "0.9.0")
+  )
+  .dependsOn(`exchange-base`)
+
+

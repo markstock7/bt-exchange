@@ -3,6 +3,7 @@ package org.bt.exchange.api
 import akka.{Done, NotUsed}
 import com.lightbend.lagom.scaladsl.api.broker.Topic
 import com.lightbend.lagom.scaladsl.api.broker.kafka.{KafkaProperties, PartitionKeyStrategy}
+import com.lightbend.lagom.scaladsl.api.transport.Method
 import com.lightbend.lagom.scaladsl.api.{Service, ServiceCall}
 import play.api.libs.json.{Format, Json}
 
@@ -29,6 +30,13 @@ trait ExchangeService extends Service {
     */
   def useGreeting(id: String): ServiceCall[GreetingMessage, Done]
 
+  /**
+    * fetch all exchanges with info
+    * @return
+    */
+//  def exchanges: ServiceCall[NotUsed, Done]
+//
+//  def candles: ServiceCall[NotUsed, Done]
 
   /**
     * This gets published to Kafka.
@@ -40,6 +48,9 @@ trait ExchangeService extends Service {
     // @formatter:off
     named("exchange")
       .withCalls(
+//        restCall(Method.GET, "/api/infos", exchanges _),
+//        restCall(Method.GET, "/api/candles", candles _),
+//        restCall(Method.GET, "/api/status", candles _),
         pathCall("/api/hello/:id", hello _),
         pathCall("/api/hello/:id", useGreeting _)
       )
