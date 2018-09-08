@@ -14,7 +14,8 @@ lazy val `exchange` = (project in file("."))
     `exchange-stream-api`,
     `exchange-stream-impl`,
     `exchange-base`,
-    `exchange-binance`
+    `exchange-binance`,
+    `exchange-bitfinex`
   )
 
 lazy val `exchange-api` = (project in file("exchange-api"))
@@ -64,6 +65,14 @@ lazy val `exchange-base` = (project in file("exchange-base"))
   )
 
 lazy val `exchange-binance` = (project in file("exchange-binance"))
+  .settings(
+    libraryDependencies ++= Seq(
+      "com.squareup.retrofit2" % "retrofit" % "2.3.0"
+    ) ++ Seq("core", "generic", "parser").map(s => "io.circe" %% s"circe-$s" % "0.9.0")
+  )
+  .dependsOn(`exchange-base`)
+
+lazy val `exchange-bitfinex` = (project in file("exchange-bitfinex"))
   .settings(
     libraryDependencies ++= Seq(
       "com.squareup.retrofit2" % "retrofit" % "2.3.0"
