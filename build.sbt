@@ -37,7 +37,7 @@ lazy val `exchange-impl` = (project in file("exchange-impl"))
     )
   )
   .settings(lagomForkedTestSettings: _*)
-  .dependsOn(`exchange-api`, `exchange-binance`)
+  .dependsOn(`exchange-api`)
 
 lazy val `exchange-stream-api` = (project in file("exchange-stream-api"))
   .settings(
@@ -57,12 +57,30 @@ lazy val `exchange-stream-impl` = (project in file("exchange-stream-impl"))
   )
   .dependsOn(`exchange-stream-api`, `exchange-api`)
 
+
+//lazy val exchanges = Seq(
+//  "exchange-binance",
+//  "exchange-bitfinex",
+//  "exchange-okex",
+//  "exchange-huobipro"
+//).map { exchange =>
+//  (project in file(exchange))
+//    .settings(
+//      libraryDependencies ++= Seq(
+//        "com.squareup.retrofit2" % "retrofit" % "2.3.0"
+//      ) ++ Seq("core", "generic", "parser").map(s => "io.circe" %% s"circe-$s" % "0.9.0")
+//    )
+//    .dependsOn(`exchange-base`)
+//}
+
+
 lazy val `exchange-base` = (project in file("exchange-base"))
   .settings(
     libraryDependencies ++= Seq(
       "com.squareup.retrofit2" % "retrofit" % "2.3.0"
     ) ++ Seq("core", "generic", "parser").map(s => "io.circe" %% s"circe-$s" % "0.9.0")
   )
+
 
 lazy val `exchange-binance` = (project in file("exchange-binance"))
   .settings(
@@ -80,4 +98,18 @@ lazy val `exchange-bitfinex` = (project in file("exchange-bitfinex"))
   )
   .dependsOn(`exchange-base`)
 
+lazy val `exchange-huobipro` = (project in file("exchange-huobipro"))
+  .settings(
+    libraryDependencies ++= Seq(
+      "com.squareup.retrofit2" % "retrofit" % "2.3.0"
+    ) ++ Seq("core", "generic", "parser").map(s => "io.circe" %% s"circe-$s" % "0.9.0")
+  )
+  .dependsOn(`exchange-base`)
 
+lazy val `exchange-okex` = (project in file("exchange-okex"))
+  .settings(
+    libraryDependencies ++= Seq(
+      "com.squareup.retrofit2" % "retrofit" % "2.3.0"
+    ) ++ Seq("core", "generic", "parser").map(s => "io.circe" %% s"circe-$s" % "0.9.0")
+  )
+  .dependsOn(`exchange-base`)

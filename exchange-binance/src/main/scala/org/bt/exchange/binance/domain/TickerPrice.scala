@@ -1,6 +1,6 @@
 package org.bt.exchange.binance.domain
 
-case class PriceTicker(
+case class TickerPrice(
 	symbol: String,
 	price: BigDecimal
 )

@@ -57,7 +57,7 @@ object SocketDecoders extends Decoders {
       ]
     ]
 		*/
-	implicit lazy val DepthEventDecoder: Decoder[Depth] = Decoder.forProduct3("s",  "b", "a")(Depth.apply)
+	implicit lazy val DepthEventDecoder: Decoder[Depth] = Decoder.forProduct3("s", "b", "a")(Depth.apply)
 
 	/**
 	"e": "aggTrade",  // Event type

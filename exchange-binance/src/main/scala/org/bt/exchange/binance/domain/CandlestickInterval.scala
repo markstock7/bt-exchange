@@ -11,7 +11,11 @@ object CandlestickInterval extends Enumeration {
 	val HALF_HOURLY = Value("30m")
 	val HOURLY = Value("1h")
 	val TWO_HOURLY = Value("2h")
+	val SIX_HOURLY = Value("2h")
+	val EIGHT_HOURLY = Value("8h")
+	val TWELEVE_HOURLY = Value("12h")
 	val DAILY = Value("1d")
+	val THREE_DAY = Value("3d")
 	val WEEKLY = Value("1w")
 	val MONTHLY = Value("1M")
 

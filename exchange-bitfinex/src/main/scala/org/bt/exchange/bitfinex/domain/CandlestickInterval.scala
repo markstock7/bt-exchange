@@ -1,7 +1,7 @@
 package org.bt.exchange.bitfinex.domain
 
-object TimeFrame extends Enumeration {
-	type TimeFrame = Value
+object CandlestickInterval extends Enumeration {
+	type CandlestickInterval = Value
 
 	val ONE_MINUTE = Value("1m")
 	val FIVE_MINUTES = Value("5m")

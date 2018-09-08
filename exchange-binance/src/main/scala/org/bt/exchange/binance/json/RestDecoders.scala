@@ -2,7 +2,7 @@ package org.bt.exchange.binance.json
 
 import io.circe.Decoder
 import io.circe.generic.semiauto.deriveDecoder
-import org.bt.exchange.binance.domain._
+import org.bt.exchange.binance.domain.{TickerDaily, _}
 
 object RestDecoders extends Decoders {
 
@@ -24,7 +24,7 @@ object RestDecoders extends Decoders {
     ]
 		]
 		*/
-	implicit lazy val CandlestickDecoder: Decoder[Candle] =
+	implicit lazy val CandleDecoder: Decoder[Candle] =
 		Decoder
 			.decodeTuple12[Long, BigDecimal, BigDecimal, BigDecimal, BigDecimal, BigDecimal, Long, BigDecimal, Int, BigDecimal, BigDecimal, String]
 			.map {
@@ -77,4 +77,11 @@ object RestDecoders extends Decoders {
 
 	implicit lazy val ExchangeSymbolDecoder:  Decoder[ExchangeSymbol]      = deriveDecoder[ExchangeSymbol]
 	implicit lazy val ExchangeInfoDecoder:    Decoder[ExchangeInfo]        = deriveDecoder[ExchangeInfo]
+	implicit lazy val ServerTimeDecoder:      Decoder[ServerTime]          = deriveDecoder[ServerTime]
+	implicit lazy val TradeDecoder:           Decoder[Trade]               = deriveDecoder[Trade]
+	implicit lazy val HistoricalTradeDecoder: Decoder[HistoricalTrade]     = deriveDecoder[HistoricalTrade]
+	implicit lazy val TickerDailyDecoder:     Decoder[TickerDaily]         = deriveDecoder[TickerDaily]
+	implicit lazy val TickerPrice:            Decoder[TickerPrice]         = deriveDecoder[TickerPrice]
+	implicit lazy val TickerBookDecoder:      Decoder[TickerBook]          = deriveDecoder[TickerBook]
+
 }

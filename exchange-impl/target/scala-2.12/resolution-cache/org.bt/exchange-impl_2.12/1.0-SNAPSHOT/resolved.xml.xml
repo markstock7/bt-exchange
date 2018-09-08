@@ -4,7 +4,7 @@
 		module="exchange-impl_2.12"
 		revision="1.0-SNAPSHOT"
 		status="integration"
-		publication="20180907212401"
+		publication="20180908123946"
 	>
 		<description>
 		exchange-impl
@@ -42,7 +42,6 @@
 		<dependency org="org.scala-lang" name="scala-compiler" rev="2.12.4" conf="scala-tool->default,optional(default)"/>
 		<dependency org="org.scala-lang" name="scala-library" rev="2.12.4" conf="scala-tool->default,optional(default);compile->default(compile)"/>
 		<dependency org="org.bt" name="exchange-api_2.12" rev="1.0-SNAPSHOT" conf="compile->default(compile)"/>
-		<dependency org="org.bt" name="exchange-binance_2.12" rev="1.0-SNAPSHOT" conf="compile->default(compile)"/>
 		<dependency org="com.lightbend.lagom" name="lagom-reloadable-server_2.12" rev="1.4.8" conf="dev-mode->default(compile)"/>
 		<dependency org="com.lightbend.lagom" name="lagom-logback_2.12" rev="1.4.8" conf="compile->default(compile)"/>
 		<dependency org="com.lightbend.lagom" name="lagom-scaladsl-server_2.12" rev="1.4.8" conf="compile->default(compile)"/>
