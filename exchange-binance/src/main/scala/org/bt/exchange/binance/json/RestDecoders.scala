@@ -81,7 +81,7 @@ object RestDecoders extends Decoders {
 	implicit lazy val TradeDecoder:           Decoder[Trade]               = deriveDecoder[Trade]
 	implicit lazy val HistoricalTradeDecoder: Decoder[HistoricalTrade]     = deriveDecoder[HistoricalTrade]
 	implicit lazy val TickerDailyDecoder:     Decoder[TickerDaily]         = deriveDecoder[TickerDaily]
-	implicit lazy val TickerPrice:            Decoder[TickerPrice]         = deriveDecoder[TickerPrice]
+	implicit lazy val TickerPriceDecoder:     Decoder[TickerPrice]         = deriveDecoder[TickerPrice]
 	implicit lazy val TickerBookDecoder:      Decoder[TickerBook]          = deriveDecoder[TickerBook]
 
 }
