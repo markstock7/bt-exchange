@@ -1,18 +1,15 @@
-import sbt.Keys.{initialCommands, parallelExecution}
-
-organization in ThisBuild := "org.bt"
-version in ThisBuild := "1.0-SNAPSHOT"
-
-// the Scala version that will be used for cross-compiled libraries
-scalaVersion in ThisBuild := "2.12.4"
+name := "bt-exchange"
+version := "0.0.1"
+organization := "org.bt"
+scalaVersion := "2.12.4"
+scalacOptions ++= Seq("-feature", "-unchecked", "-deprecation")
+publishMavenStyle := true
 
 lazy val `exchange` = (project in file("."))
   .aggregate(
     `exchange-base`,
     `exchange-binance`,
-    // `exchange-bitfinex`
   )
-
 
 lazy val `exchange-base` = (project in file("exchange-base"))
   .settings(
