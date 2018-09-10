@@ -1,68 +1,56 @@
 name := "bt-exchange"
-organization := "org.bt"
+organization := "com.blocktrending"
 scalaVersion := "2.12.4"
 scalacOptions ++= Seq("-feature", "-unchecked", "-deprecation")
 
-resolvers ++= Seq(
-  "spray" at "http://repo.spray.io/",
-  "Typesafe Repo" at "http://repo.typesafe.com/typesafe/releases/"
+lazy val commonSettings = Seq(
+  organization := "com.blocktrending",
+  scalacOptions ++= compilerOptions
 )
 
-publishMavenStyle := true
+lazy val compilerOptions = Seq(
+  "-unchecked",
+  "-feature",
+  "-language:existentials",
+  "-language:higherKinds",
+  "-language:implicitConversions",
+  "-language:postfixOps",
+  "-deprecation",
+  "-encoding",
+  "utf8"
+)
 
-publishTo := {
-  val nexus = "https://oss.sonatype.org/"
-  if (isSnapshot.value)
-    Some("snapshots" at nexus + "content/repositories/snapshots")
-  else
-    Some("releases" at nexus + "service/local/staging/deploy/maven2")
-}
+lazy val root =(project in file("."))
+    .settings(commonSettings)
+    .aggregate(
+      `bt-exchange-base`,
+      `bt-exchange-binance`,
+    )
 
-publishArtifact in Test := false
-
-pomIncludeRepository := { _ => false }
-
-pomExtra := (
-  <url>https://github.com/NoonTechnology/bt-exchange</url>
-    <licenses>
-      <license>
-        <name>MIT</name>
-        <url>http://opensource.org/licenses/MIT</url>
-        <distribution>repo</distribution>
-      </license>
-    </licenses>
-    <scm>
-      <url>git@github.com:NoonTechnology/bt-exchange.git</url>
-      <connection>scm:git@github.com:NoonTechnology/bt-exchange.git</connection>
-    </scm>
-    <developers>
-      <developer>
-        <id>markstock7</id>
-        <name>Mark Stock</name>
-        <url>https://github.com/markstock7</url>
-      </developer>
-    </developers>)
-
-
-lazy val `exchange` = (project in file("."))
-  .aggregate(
-    `exchange-base`,
-    `exchange-binance`,
-  )
-
-lazy val `exchange-base` = (project in file("exchange-base"))
+lazy val `bt-exchange-base` = (project in file("bt-exchange-base"))
+  .settings(commonSettings: _*)
   .settings(
     libraryDependencies ++= Seq(
       "com.squareup.retrofit2" % "retrofit" % "2.3.0"
     ) ++ Seq("core", "generic", "parser").map(s => "io.circe" %% s"circe-$s" % "0.9.0")
   )
 
-
-lazy val `exchange-binance` = (project in file("exchange-binance"))
+lazy val `bt-exchange-binance` = (project in file("bt-exchange-binance"))
+  .settings(commonSettings: _*)
   .settings(
+    assemblySettings,
     libraryDependencies ++= Seq(
       "com.squareup.retrofit2" % "retrofit" % "2.3.0"
     ) ++ Seq("core", "generic", "parser").map(s => "io.circe" %% s"circe-$s" % "0.9.0")
   )
-  .dependsOn(`exchange-base`)
+  .dependsOn(`bt-exchange-base`)
+
+
+lazy val assemblySettings = Seq(
+  assemblyJarName in assembly := name.value + ".jar",
+  assemblyMergeStrategy in assembly := {
+    case PathList("META-INF", xs @ _*) => MergeStrategy.discard
+    case _                             => MergeStrategy.first
+  }
+)
 
