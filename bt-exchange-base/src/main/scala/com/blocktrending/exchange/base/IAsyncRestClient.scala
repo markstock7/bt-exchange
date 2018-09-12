@@ -1,12 +1,10 @@
 package com.blocktrending.exchange.base
 
-import scala.concurrent.Future
-
-case class Symbol()
+case class Symbol(
+	base: String,
+	quote: String
+)
 
 trait IAsyncRestClient {
-
-	def ping: Future[Unit]
-
 
 }

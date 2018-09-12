@@ -1,6 +1,8 @@
 package com.blocktrending.exchange.binance.json
 
+import com.blocktrending.exchange.base.EnumTranscoder
 import com.blocktrending.exchange.binance.domain
+import com.blocktrending.exchange.binance.domain.SymbolStatus.SymbolStatus
 import com.blocktrending.exchange.binance.domain._
 import io.circe.Decoder
 import io.circe.generic.semiauto.deriveDecoder
@@ -75,6 +77,7 @@ object RestDecoders extends Decoders {
 		"T"
 	)((price: BigDecimal, quantity: BigDecimal, timestamp: Long) => AggTrade("", price, quantity, timestamp))
 
+	implicit lazy val SymbolStatusDecoder: Decoder[SymbolStatus]           = new EnumTranscoder(SymbolStatus)
 
 	implicit lazy val ExchangeSymbolDecoder:  Decoder[ExchangeSymbol]      = deriveDecoder[ExchangeSymbol]
 	implicit lazy val ExchangeInfoDecoder:    Decoder[ExchangeInfo]        = deriveDecoder[ExchangeInfo]

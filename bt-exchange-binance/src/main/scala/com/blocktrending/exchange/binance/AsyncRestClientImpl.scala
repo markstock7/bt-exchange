@@ -1,13 +1,13 @@
 package com.blocktrending.exchange.binance
 
-import com.blocktrending.exchange.base.{AsJava, RunRequest}
+import com.blocktrending.exchange.base.{AsJava, IAsyncRestClient, RunRequest}
 import com.blocktrending.exchange.binance.domain.CandlestickInterval.CandlestickInterval
 import com.blocktrending.exchange.binance.domain._
 import com.blocktrending.exchange.binance.json.RestDecoders._
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class AsyncRestClientImpl(service: RestApiService)(implicit ex: ExecutionContext) {
+class AsyncRestClientImpl(service: RestApiService)(implicit ex: ExecutionContext) extends IAsyncRestClient {
 
 	def ping: Future[Unit] = RunRequest[Unit](service.ping)
 
@@ -103,11 +103,10 @@ class AsyncRestClientImpl(service: RestApiService)(implicit ex: ExecutionContext
 		)
 	)
 
-	def symbols: Future[Seq[Int]] = {
-		RunRequest[ExchangeInfo](service.exchangeInfo).map { exchangeInfo =>
+	def symbols: Future[List[(String, Boolean)]] = {
+		exchangeInfo.map { exchangeInfo =>
 			exchangeInfo.symbols.map { symbol =>
-				symbol
-				0
+				(symbol.symbol, symbol.status == SymbolStatus.TRADING)
 			}
 		}
 	}
