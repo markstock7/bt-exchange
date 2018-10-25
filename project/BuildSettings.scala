@@ -10,27 +10,38 @@ object BuildSettings {
 		name         := "bt-exchange",
 		version      := "1.0-SNAPSHOT",
 		scalaVersion := globalScalaVersion,
-//		crossScalaVersions := Seq("2.11.12", "2.12.4"),
 		javacOptions += "-Xlint:unchecked",
 		resolvers ++= Dependencies.Resolvers.commons
 	)
 
 	val compilerOptions = Seq(
-		"-deprecation", "-unchecked", "-feature", "-language:_",
+		"-deprecation",
+		"-unchecked",
+		"-feature",
+		"-language:_",
 		"-Xfatal-warnings",
 		"-Ywarn-dead-code",
-		"-Ywarn-unused-import",
-		"-Ywarn-unused",
+//		"-Ywarn-unused-import",
+//		"-Ywarn-unused",
 		"-Xlint:missing-interpolator",
-		"-Ywarn-unused-import",
-		"-Ybackend:GenBCode", "-Ydelambdafy:method", "-target:jvm-1.8"
+//		"-Ywarn-unused-import",
+//		"-Ybackend:GenBCode",
+		"-Ydelambdafy:method",
+		"-target:jvm-1.8"
+	)
+
+	lazy val commonSettings = Seq(
+		organization := "com.blocktrending",
+		scalacOptions ++= compilerOptions
 	)
 
 	def compile(deps: ModuleID*): Seq[ModuleID] = deps map (_ % "compile")
 	def provided(deps: ModuleID*): Seq[ModuleID] = deps map (_ % "provided")
 
 	def module(name: String, deps: Seq[sbt.ClasspathDep[sbt.ProjectReference]] = Seq.empty) =
-		Project(name, file(name)).dependsOn(deps: _*).settings(
+		Project(name, file(name)).dependsOn(deps: _*)
+			.settings(commonSettings: _*)
+			.settings(
 			libraryDependencies ++= Seq(
 				"com.squareup.retrofit2" % "retrofit" % "2.3.0",
 				"com.typesafe.akka" %% "akka-actor" % "2.5.17",

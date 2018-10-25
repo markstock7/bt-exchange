@@ -2,14 +2,15 @@ import Dependencies._
 import BuildSettings._
 
 lazy val root =(project in file("."))
-    .aggregate(
-      `bt-exchange-base`,
-      `bt-exchange-binance`,
-    )
+  .settings(commonSettings: _*)
+  .aggregate(
+    `exchange-base`,
+    `exchange-binance`,
+  )
 
-lazy val `bt-exchange-base` = module("bt-exchange-base", Seq())
+lazy val `exchange-base` = module("exchange-base", Seq())
 
-lazy val `bt-exchange-binance` = module("bt-exchange-binance", Seq(`bt-exchange-base`))
+lazy val `exchange-binance` = module("exchange-binance", Seq(`exchange-base`))
 
 lazy val assemblySettings = Seq(
   assemblyJarName in assembly := name.value + ".jar",
