@@ -13,24 +13,14 @@ object RestDecoders extends Decoders {
 	implicit lazy val NestedSymbolDecoder:    Decoder[NestedSymbol]         = deriveDecoder[NestedSymbol]
 	implicit lazy val ExchangeInfoDecoder:    Decoder[ExchangeInfo]         = deriveDecoder[ExchangeInfo]
 
-//	implicit lazy val AggTradeDecoder: Decoder[AggTrade] = Decoder.forProduct4(
-//		"price",
-//		"qty",
-//		"time",
-//		"isBuyerMaker"
-//	)((price: Double, qty: Double, time: Long, isBuyerMaker: Boolean) => AggTrade("", price, qty, time, isBuyerMaker))
+
 
 	implicit lazy val DepthDecoder:           Decoder[Depth]                = Decoder.forProduct2(
 		"bids",
 		"asks"
 	)((bids: Seq[OrderBookEntry], asks: Seq[OrderBookEntry]) => Depth("", bids, asks))
 
-	implicit lazy val AggTradeDecoder: Decoder[AggTrade] = Decoder.forProduct4(
-		"p",
-		"q",
-		"T",
-		"m"
-	)((price: Double, qty: Double, time: Long, isBuyerMaker: Boolean) => AggTrade("", price, qty, time, isBuyerMaker))
+
 
 	implicit lazy val CandleDecoder: Decoder[Candle] =
 		Decoder

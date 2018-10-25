@@ -45,11 +45,11 @@ class RestClientImplSpec extends AsyncFlatSpec with Matchers {
 		}
 	}
 
-//	"trades" should "return non empty results" in {
-//		restClient.trades("BTCUSDT").map { aggTrades =>
-//			assert(aggTrades.nonEmpty)
-//		}
-//	}
+	"trades" should "return non empty results" in {
+		restClient.trades("BTCUSDT").map { aggTrades =>
+			assert(aggTrades.nonEmpty)
+		}
+	}
 
 	"aggTrades" should "return non empty results" in {
 		restClient.aggTrades("BTCUSDT").map { aggTrades =>
