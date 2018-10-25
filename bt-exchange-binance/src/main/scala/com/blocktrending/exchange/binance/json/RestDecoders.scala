@@ -1,32 +1,37 @@
 package com.blocktrending.exchange.binance.json
 
-import com.blocktrending.exchange.base.EnumTranscoder
-import com.blocktrending.exchange.binance.domain
-import com.blocktrending.exchange.binance.domain.SymbolStatus.SymbolStatus
-import com.blocktrending.exchange.binance.domain._
-import io.circe.Decoder
+import com.blocktrending.exchange.base.domain.{SimpleTicker, _}
+import com.blocktrending.exchange.binance.domain.{ExchangeInfo, ServerResponse}
+import io.circe.{Decoder, HCursor}
 import io.circe.generic.semiauto.deriveDecoder
 
 object RestDecoders extends Decoders {
 
-	/**
-		* [
-  [
-    1499040000000,      // Open time
-    "0.01634790",       // Open
-    "0.80000000",       // High
-    "0.01575800",       // Low
-    "0.01577100",       // Close
-    "148976.11427815",  // Volume
-    1499644799999,      // Close time
-    "2434.19055334",    // Quote asset volume
-    308,                // Number of trades
-    "1756.87402397",    // Taker buy base asset volume
-    "28.46694368",      // Taker buy quote asset volume
-    "17928899.62484339" // Ignore
-    ]
-		]
-		*/
+	implicit lazy val ServerResponseDecoder:  Decoder[ServerResponse]       = deriveDecoder[ServerResponse]
+	implicit lazy val StringDecoder:          Decoder[String]               = Decoder.decodeString
+
+	implicit lazy val NestedSymbolDecoder:    Decoder[NestedSymbol]         = deriveDecoder[NestedSymbol]
+	implicit lazy val ExchangeInfoDecoder:    Decoder[ExchangeInfo]         = deriveDecoder[ExchangeInfo]
+
+//	implicit lazy val AggTradeDecoder: Decoder[AggTrade] = Decoder.forProduct4(
+//		"price",
+//		"qty",
+//		"time",
+//		"isBuyerMaker"
+//	)((price: Double, qty: Double, time: Long, isBuyerMaker: Boolean) => AggTrade("", price, qty, time, isBuyerMaker))
+
+	implicit lazy val DepthDecoder:           Decoder[Depth]                = Decoder.forProduct2(
+		"bids",
+		"asks"
+	)((bids: Seq[OrderBookEntry], asks: Seq[OrderBookEntry]) => Depth("", bids, asks))
+
+	implicit lazy val AggTradeDecoder: Decoder[AggTrade] = Decoder.forProduct4(
+		"p",
+		"q",
+		"T",
+		"m"
+	)((price: Double, qty: Double, time: Long, isBuyerMaker: Boolean) => AggTrade("", price, qty, time, isBuyerMaker))
+
 	implicit lazy val CandleDecoder: Decoder[Candle] =
 		Decoder
 			.decodeTuple12[Long, BigDecimal, BigDecimal, BigDecimal, BigDecimal, BigDecimal, Long, BigDecimal, Int, BigDecimal, BigDecimal, String]
@@ -35,57 +40,23 @@ object RestDecoders extends Decoders {
 					Candle(openTime, closeTime, open, close, high, low, volume, quoteV, trades)
 			}
 
+	implicit lazy val TickerDecoder: Decoder[Ticker] = Decoder.forProduct9(
+		"symbol",
+		"lastPrice",
+		"openPrice",
+		"highPrice",
+		"lowPrice",
+		"volume",
+		"quoteVolume",
+		"openTime",
+		"closeTime"
+	)(Ticker.apply)
 
-	/**
-	"lastUpdateId": 1027024,
-		"bids": [
-			[
-				"4.00000000",     // PRICE
-				"431.00000000",   // QTY
-				[]                // Ignore.
-			]
-		],
-      "asks": [
-        [
-          "4.00000200",
-          "12.00000000",
-          []
-        ]
-      ]
-		*/
-	implicit lazy val DepthDecoder: Decoder[Depth] = Decoder.forProduct2(
-		"bids",
-		"asks"
-	)((bids: List[OrderBookEntry], asks: List[OrderBookEntry]) => domain.Depth("", bids, asks))
+	implicit lazy val SimpleTickerDecoder: Decoder[SimpleTicker] = Decoder.forProduct2(
+		"symbol",
+		"price"
+	)(SimpleTicker.apply)
 
 
-	/**
-	{
-    "a": 26129,         // Aggregate tradeId
-    "p": "0.01633102",  // Price
-    "q": "4.70443515",  // Quantity
-    "f": 27781,         // First tradeId
-    "l": 27781,         // Last tradeId
-    "T": 1498793709153, // Timestamp
-    "m": true,          // Was the buyer the maker?
-    "M": true           // Was the trade the best price match?
-  }
-		*/
-	implicit lazy val AggTradeDecoder: Decoder[AggTrade] = Decoder.forProduct3(
-		"p",
-		"q",
-		"T"
-	)((price: BigDecimal, quantity: BigDecimal, timestamp: Long) => AggTrade("", price, quantity, timestamp))
-
-	implicit lazy val SymbolStatusDecoder: Decoder[SymbolStatus]           = new EnumTranscoder(SymbolStatus)
-
-	implicit lazy val ExchangeSymbolDecoder:  Decoder[ExchangeSymbol]      = deriveDecoder[ExchangeSymbol]
-	implicit lazy val ExchangeInfoDecoder:    Decoder[ExchangeInfo]        = deriveDecoder[ExchangeInfo]
-	implicit lazy val ServerTimeDecoder:      Decoder[ServerTime]          = deriveDecoder[ServerTime]
-	implicit lazy val TradeDecoder:           Decoder[Trade]               = deriveDecoder[Trade]
-	implicit lazy val HistoricalTradeDecoder: Decoder[HistoricalTrade]     = deriveDecoder[HistoricalTrade]
-	implicit lazy val TickerDailyDecoder:     Decoder[TickerDaily]         = deriveDecoder[TickerDaily]
-	implicit lazy val TickerPriceDecoder:     Decoder[TickerPrice]         = deriveDecoder[TickerPrice]
-	implicit lazy val TickerBookDecoder:      Decoder[TickerBook]          = deriveDecoder[TickerBook]
 
 }

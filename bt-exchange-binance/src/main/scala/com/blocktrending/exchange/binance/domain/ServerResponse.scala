@@ -1,5 +1,5 @@
 package com.blocktrending.exchange.binance.domain
 
-case class ServerTime(
-	serverTime: BigInt
+case class ServerResponse(
+	serverTime: Long
 )

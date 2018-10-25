@@ -1,7 +1,8 @@
 package com.blocktrending.exchange.binance.domain
 
-case class ExchangeInfo (
-	timezone: String,
+import com.blocktrending.exchange.base.domain.NestedSymbol
+
+case class ExchangeInfo(
 	serverTime: Long,
-	symbols: List[ExchangeSymbol]
+	symbols: Seq[NestedSymbol]
 )

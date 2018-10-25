@@ -9,5 +9,7 @@ class ClientFactory(implicit ex: ExecutionContext) {
 		new Retrofit.Builder().baseUrl("https://api.binance.com").build.create(classOf[RestApiService])
 	}
 
-	def newAsyncRestClient = new AsyncRestClientImpl(service)
+	def newAsyncRestClient = new RestClientImpl(service)
+
+	def newWebSocketClient = new WebsocketClientImpl
 }

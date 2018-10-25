@@ -1,40 +1,10 @@
 package com.blocktrending.exchange.binance.json
 
-import com.blocktrending.exchange.binance.domain.{AggTrade, Depth, TickerStatistic}
+import com.blocktrending.exchange.base.domain.{AggTrade, Depth, Ticker}
 import io.circe.Decoder
 
 object SocketDecoders extends Decoders {
 
-	/**
-	"e": "kline",     // Event type
-    "E": 123456789,   // Event time
-    "s": "BNBBTC",    // Symbol
-    "k": {
-    "t": 123400000, // Kline start time
-    "T": 123460000, // Kline close time
-    "s": "BNBBTC",  // Symbol
-    "i": "1m",      // Interval
-    "f": 100,       // First trade ID
-    "L": 200,       // Last trade ID
-    "o": "0.0010",  // Open price
-    "c": "0.0020",  // Close price
-    "h": "0.0025",  // High price
-    "l": "0.0015",  // Low price
-    "v": "1000",    // Base asset volume
-    "n": 100,       // Number of trades
-    "x": false,     // Is this kline closed?
-    "q": "1.0000",  // Quote asset volume
-    "V": "500",     // Taker buy base asset volume
-    "Q": "0.500",   // Taker buy quote asset volume
-    "B": "123456"   // Ignore
-		*/
-	//	implicit lazy val CandlestickDetailedDecoder: Decoder[CandlestickDetailed] =
-	//		Decoder.forProduct15("t", "o", "h", "l", "c", "v", "T", "i", "f", "L", "q", "n", "V", "Q", "x")(
-	//			CandlestickDetailed.apply
-	//		)
-	//
-	//	implicit lazy val CandlestickEventDecoder: Decoder[CandlestickEvent] =
-	//		Decoder.forProduct4("e", "E", "s", "k")(CandlestickEvent.apply)
 
 	/**
 	"e": "depthUpdate", // Event type
@@ -57,22 +27,28 @@ object SocketDecoders extends Decoders {
       ]
     ]
 		*/
-	implicit lazy val DepthEventDecoder: Decoder[Depth] = Decoder.forProduct3("s", "b", "a")(Depth.apply)
+	implicit lazy val DepthEvent: Decoder[Depth] = Decoder.forProduct3("s", "b", "a")(Depth.apply)
 
 	/**
-	"e": "aggTrade",  // Event type
-    "E": 123456789,   // Event time
-    "s": "BNBBTC",    // Symbol
-    "a": 12345,       // Aggregate trade ID
-    "p": "0.001",     // Price
-    "q": "100",       // Quantity
-    "f": 100,         // First trade ID
-    "l": 105,         // Last trade ID
-    "T": 123456785,   // Trade time
-    "m": true,        // Is the buyer the market maker?
-    "M": true         // Ignore.
+		* "e": "aggTrade",  // Event type
+  "E": 123456789,   // Event time
+  "s": "BNBBTC",    // Symbol
+  "a": 12345,       // Aggregate trade ID
+  "p": "0.001",     // Price
+  "q": "100",       // Quantity
+  "f": 100,         // First trade ID
+  "l": 105,         // Last trade ID
+  "T": 123456785,   // Trade time
+  "m": true,        // Is the buyer the market maker?
+  "M": true         // Ignore
 		*/
-	implicit lazy val AggTradeEventDecoder: Decoder[AggTrade] = Decoder.forProduct4("s", "p", "q", "M")(AggTrade.apply)
+	implicit lazy val AggTradeDecoder: Decoder[AggTrade] = Decoder.forProduct5(
+		"s",
+		"p",
+		"q",
+		"T",
+		"m"
+	)(AggTrade.apply)
 
 	/**
 	"e": "24hrTicker",  // Event type
@@ -99,19 +75,16 @@ object SocketDecoders extends Decoders {
     "L": 18150,         // Last trade Id
     "n": 18151          // Total number of trades
 		*/
-	implicit lazy val TickerStatisticDecoder: Decoder[TickerStatistic] = Decoder.forProduct12(
+	implicit lazy val TickerDecoder: Decoder[Ticker] = Decoder.forProduct9(
 		"s",
-		"p",
-		"P",
-		"x",
+		"c",
 		"o",
 		"h",
 		"l",
 		"v",
 		"q",
 		"O",
-		"C",
-		"n"
-	)(TickerStatistic.apply)
+		"C"
+	)(Ticker.apply)
 }
 

@@ -1,4 +1,4 @@
-package com.blocktrending.exchange.binance.domain
+package com.blocktrending.exchange.base.domain
 
 case class Candle(
 	openTime:                 Long,

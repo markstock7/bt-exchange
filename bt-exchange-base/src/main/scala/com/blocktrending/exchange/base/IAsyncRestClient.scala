@@ -1,10 +1,11 @@
 package com.blocktrending.exchange.base
 
-case class Symbol(
-	base: String,
-	quote: String
-)
+import com.blocktrending.exchange.base.Status.Status
+import com.blocktrending.exchange.base.domain.NestedSymbol
+
+import scala.concurrent.Future
 
 trait IAsyncRestClient {
-
+	def ping: Future[Status]
+	def symbols: Future[Seq[NestedSymbol]]
 }
