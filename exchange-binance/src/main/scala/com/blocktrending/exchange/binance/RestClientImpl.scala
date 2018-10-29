@@ -100,7 +100,7 @@ class RestClientImpl(service: RestApiService)(implicit ex: ExecutionContext) ext
 			AsJava(startTime),
 			AsJava(endTime)
 		)
-	)
+	).map(candles => candles.map(_.copy(symbol = symbol, interval = interval.toString)))
 
 	def ticker24hr(
 		symbol:      String

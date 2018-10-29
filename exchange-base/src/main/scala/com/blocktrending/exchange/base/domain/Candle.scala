@@ -1,13 +1,15 @@
 package com.blocktrending.exchange.base.domain
 
 case class Candle(
+	symbol:                   String,
+	interval:                 String,
 	openTime:                 Long,
 	closeTime:                Long,
-	open:                     BigDecimal,
-	close:                    BigDecimal,
-	high:                     BigDecimal,
-	low:                      BigDecimal,
-	volume:                   BigDecimal,
-	quoteAssetVolume:         BigDecimal,
+	open:                     Double,
+	close:                    Double,
+	high:                     Double,
+	low:                      Double,
+	volume:                   Double,
+	quoteAssetVolume:         Double,
 	numberOfTrades:           Long
 )

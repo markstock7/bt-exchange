@@ -24,10 +24,10 @@ object RestDecoders extends Decoders {
 
 	implicit lazy val CandleDecoder: Decoder[Candle] =
 		Decoder
-			.decodeTuple12[Long, BigDecimal, BigDecimal, BigDecimal, BigDecimal, BigDecimal, Long, BigDecimal, Int, BigDecimal, BigDecimal, String]
+			.decodeTuple12[Long, Double, Double, Double, Double, Double, Long, Double, Int, Double, Double, String]
 			.map {
 				case (openTime, open, high, low, close, volume, closeTime, quoteV, trades, bakerByBaseV, takerBuyQuoteV, _) =>
-					Candle(openTime, closeTime, open, close, high, low, volume, quoteV, trades)
+					Candle("", "", openTime, closeTime, open, close, high, low, volume, quoteV, trades)
 			}
 
 	implicit lazy val TickerDecoder: Decoder[Ticker] = Decoder.forProduct9(
