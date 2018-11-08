@@ -21,23 +21,23 @@ class RestClientImplSpec extends AsyncFlatSpec with Matchers {
 		}
 	}
 
-	"depth" should "has symbol" in {
-		restClient.depth("BTCUSDT", None).map { depth =>
-			assert(depth.symbol == "BTCUSDT")
-		}
-	}
-
-	it should "default return 100 results" in {
-		restClient.depth("BTCUSDT", None).map { depth =>
-			assert(depth.bids.length == 100)
-		}
-	}
-
-	it should "return non empty asks" in {
-		restClient.depth("BTCUSDT", None).map { depth =>
-			assert(depth.asks.nonEmpty)
-		}
-	}
+//	"depth" should "has symbol" in {
+//		restClient.depth("BTCUSDT", None).map { depth =>
+//			assert(depth.symbol == "BTCUSDT")
+//		}
+//	}
+//
+//	it should "default return 100 results" in {
+//		restClient.depth("BTCUSDT", None).map { depth =>
+//			assert(depth.bids.length == 100)
+//		}
+//	}
+//
+//	it should "return non empty asks" in {
+//		restClient.depth("BTCUSDT", None).map { depth =>
+//			assert(depth.asks.nonEmpty)
+//		}
+//	}
 
 	"ticker24hr" should "return non empty results" in {
 		restClient.ticker24hr.map { tickers =>

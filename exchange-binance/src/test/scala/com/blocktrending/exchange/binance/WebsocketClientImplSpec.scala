@@ -3,19 +3,23 @@ package com.blocktrending.exchange.binance
 import com.blocktrending.exchange.base.Status
 import org.scalatest._
 
+import scala.concurrent.{Future, Promise}
+
 class WebsocketClientImplSpec extends AsyncFlatSpec with Matchers {
 
-	val client = (new ClientFactory).newWebSocketClient
-
-//	"ticker24hr" should "return nonemtpy response" in {
-//		restClient.ticker24hr.map { tickers =>
-//			assert(tickers.nonEmpty)
-//		}
-//	}
-
-//	"onAggTradeEventUpdate" should "work" in {
-//		client.onAggTradeEventUpdate("BTCUSDT") { aggTrade =>
-//			assert(true)
-//		}
-//	}
+	"onAllTickerUpdateEvent" should "Working Well" in {
+		val client = new WebsocketClientImpl
+		val p = Promise[Assertion]()
+		Future {
+			client.onAllTickerUpdateEvent {
+				case Left(e) =>
+					client.close()
+					p.success(assert(false))
+				case Right(payload) =>
+					client.close()
+					p.success(assert(true))
+			}
+		}
+		p.future
+	}
 }

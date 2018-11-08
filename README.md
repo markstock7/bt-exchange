@@ -8,3 +8,6 @@ https://github.com/scalacenter/sbt-release-early/wiki/How-to-create-a-gpg-key
 https://github.com/djspiewak/sbt-spiewak/commit/3cd2e6db22ab94e6e05f82a1af65d317d3b0745f
 https://www.scala-sbt.org/sbt-pgp/usage.html
 https://www.scala-sbt.org/release/docs/Using-Sonatype.html
+
+
+docker run -it -p 30303:30303 -v /Volumes/MarkStock:/root/.ethereum ethereum/client-go --rpc --rpcaddr "0.0.0.0"

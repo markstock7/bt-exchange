@@ -32,7 +32,7 @@ object Dependencies {
 	val macwire = "com.softwaremill.macwire" %% "macros" % "2.3.0" % "provided"
 	val scalaTest = "org.scalatest" %% "scalatest" % "3.0.4" % Test
 	val scalaTestPlus = "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2" % Test
-	lazy val btutil = "com.blocktrending" %% "bt-util" % "0.0.17"
+	lazy val btutil = "com.blocktrending" %% "bt-util" % "0.0.18"
 	lazy val circe = Seq("core", "generic", "parser").map(s => "io.circe" %% s"circe-$s" % "0.9.0")
 
 }

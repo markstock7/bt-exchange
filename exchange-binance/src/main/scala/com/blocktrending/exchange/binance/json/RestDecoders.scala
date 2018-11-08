@@ -13,24 +13,19 @@ object RestDecoders extends Decoders {
 	implicit lazy val NestedSymbolDecoder:    Decoder[NestedSymbol]         = deriveDecoder[NestedSymbol]
 	implicit lazy val ExchangeInfoDecoder:    Decoder[ExchangeInfo]         = deriveDecoder[ExchangeInfo]
 
-
-
 	implicit lazy val DepthDecoder:           Decoder[Depth]                = Decoder.forProduct2(
 		"bids",
 		"asks"
 	)((bids: Seq[OrderBookEntry], asks: Seq[OrderBookEntry]) => Depth("", bids, asks))
 
-
-
-	implicit lazy val CandleDecoder: Decoder[Candle] =
-		Decoder
-			.decodeTuple12[Long, Double, Double, Double, Double, Double, Long, Double, Int, Double, Double, String]
+	implicit lazy val CandleDecoder:          Decoder[Candle] =
+		Decoder.decodeTuple12[Long, Double, Double, Double, Double, Double, Long, Double, Int, Double, Double, String]
 			.map {
 				case (openTime, open, high, low, close, volume, closeTime, quoteV, trades, bakerByBaseV, takerBuyQuoteV, _) =>
 					Candle("", "", openTime, closeTime, open, close, high, low, volume, quoteV, trades)
 			}
 
-	implicit lazy val TickerDecoder: Decoder[Ticker] = Decoder.forProduct9(
+	implicit lazy val TickerDecoder:          Decoder[Ticker] = Decoder.forProduct9(
 		"symbol",
 		"lastPrice",
 		"openPrice",
@@ -42,11 +37,8 @@ object RestDecoders extends Decoders {
 		"closeTime"
 	)(Ticker.apply)
 
-	implicit lazy val SimpleTickerDecoder: Decoder[SimpleTicker] = Decoder.forProduct2(
+	implicit lazy val SimpleTickerDecoder:    Decoder[SimpleTicker] = Decoder.forProduct2(
 		"symbol",
 		"price"
 	)(SimpleTicker.apply)
-
-
-
 }

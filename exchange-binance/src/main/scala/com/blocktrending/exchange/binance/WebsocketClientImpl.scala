@@ -4,60 +4,49 @@ import java.io.{Closeable, IOException}
 
 import com.blocktrending.exchange.base.WebsocketListenerImpl
 import com.blocktrending.exchange.base.domain.{AggTrade, Candle, Depth, Ticker}
-import okhttp3.{OkHttpClient, Request, Response, WebSocket}
+import okhttp3._
 import com.blocktrending.exchange.binance.json.SocketDecoders._
 
-import scala.concurrent.Future
-
 class WebsocketClientImpl extends Closeable {
-	private val client = new OkHttpClient
+	private val client: OkHttpClient = new OkHttpClient
 
-	def errCallback: Exception => Unit = e => throw e
+	trait WebSocketCallbackImpl extends WebSocketListener {
+		override def onFailure(webSocket: WebSocket, t: Throwable, response: Response): Unit = handleFailure(webSocket, t, response)
+		override def onClosing(webSocket: WebSocket, code: Int, reason: String): Unit = handleClosing(webSocket, code, reason)
+		override def onOpen(webSocket: WebSocket, response: Response): Unit = handleOpen(webSocket, response)
+		override def onClosed(webSocket: WebSocket, code: Int, reason: String): Unit = handleClosed(webSocket, code, reason)
+	}
 
-	def onAggTradeEventUpdate(symbol: String)(callback: AggTrade => Unit) : Unit =
-		createNewWebSocket(s"$symbol@aggTrade", new WebsocketListenerImpl(callback))
+	def onAggTradeEventUpdate(symbol: String)(callback: Either[Exception, AggTrade] => Unit): WebSocket =
+		createNewWebSocket(s"$symbol@aggTrade", new WebsocketListenerImpl(callback) with WebSocketCallbackImpl )
 
-	def onAggTradeEventUpdate(symbol: String, listener: WebsocketListenerImpl[AggTrade]) : Unit =
-		createNewWebSocket(s"$symbol@aggTrade", listener)
+	def onTradeEventUpdate(symbol: String)(callback: Either[Exception, AggTrade] => Unit): WebSocket =
+		createNewWebSocket(s"$symbol@trade", new WebsocketListenerImpl(callback) with WebSocketCallbackImpl )
 
-	def onTradeEventUpdate(symbol: String)(callback: AggTrade => Unit): Unit =
-		createNewWebSocket(s"$symbol@trade", new WebsocketListenerImpl(callback))
-
-	def onTradeEventUpdate(symbol: String, listener: WebsocketListenerImpl[AggTrade]): Unit =
-		createNewWebSocket(s"$symbol@trade", listener)
-
-
-	def onAllMiniTickerUpdate(callback: Seq[Ticker] => Unit): Unit =
-		createNewWebSocket(s"!miniTicker@arr", new WebsocketListenerImpl(callback))
-
-	def onAllMiniTickerUpdate(listener: WebsocketListenerImpl[Ticker]): Unit =
-		createNewWebSocket(s"!miniTicker@arr", listener)
+	def onTradeEventUpdate(symbols: Seq[String])(callback: Either[Exception, AggTrade] => Unit): WebSocket =
+		createNewCombainSocket(symbols.map(symbol => s"$symbol@trade"), new WebsocketListenerImpl(callback) with WebSocketCallbackImpl)
 
 
-	def onDepthUpdateEvent(symbol: String)(callback: Depth => Unit): Unit =
-		createNewWebSocket(s"$symbol@depth", new WebsocketListenerImpl(callback))
+	def onAllMiniTickerUpdate(callback: Either[Exception, Seq[Ticker]] => Unit): WebSocket =
+		createNewWebSocket(s"!miniTicker@arr", new WebsocketListenerImpl(callback) with WebSocketCallbackImpl )
 
-	def onDepthUpdateEvent[Depth](symbol: String, listener: WebsocketListenerImpl[Depth]): Unit =
-		createNewWebSocket(s"$symbol@depth", listener)
+	def onDepthUpdateEvent(symbol: String)(callback: Either[Exception, Depth] => Unit): WebSocket =
+		createNewWebSocket(s"$symbol@depth", new WebsocketListenerImpl(callback) with WebSocketCallbackImpl )
 
-
-	def onTickerUpdateEvent(symbol: String)(callback: Ticker => Unit): Unit =
-		createNewWebSocket(s"$symbol@ticker", new WebsocketListenerImpl(callback))
-
-	def onTickerUpdateEvent(symbol: String, listener: WebsocketListenerImpl[Ticker]): Unit =
-		createNewWebSocket(s"$symbol@ticker", listener)
+	def onDepthUpdateEvent(symbols: Seq[String])(callback: Either[Exception, Depth] => Unit): WebSocket =
+		createNewCombainSocket(symbols.map(symbol => s"$symbol@depth"), new WebsocketListenerImpl(callback) with WebSocketCallbackImpl)
 
 
-	def onCandleUpdateEvent(symbols: Seq[String], interval: String)(callback: Candle => Unit): Unit =
-		createNewCombainSocket(symbols.map(s => s"$s@kline_$interval"), new WebsocketListenerImpl(callback))
+	def onTickerUpdateEvent(symbol: String)(callback: Either[Exception, Ticker] => Unit): WebSocket =
+		createNewWebSocket(s"$symbol@ticker", new WebsocketListenerImpl(callback) with WebSocketCallbackImpl )
 
 
-	def onAllTickerUpdateEvent(callback: Seq[Ticker] => Unit): Unit =
-		createNewWebSocket("!ticker@arr", new WebsocketListenerImpl(callback))
+	def onCandleUpdateEvent(symbols: Seq[String], interval: String)(callback: Either[Exception, Candle] => Unit): WebSocket =
+		createNewCombainSocket(symbols.map(symbol => s"$symbol@kline_$interval"), new WebsocketListenerImpl(callback) with WebSocketCallbackImpl )
 
-	def onAllTickerUpdateEvent[Ticker](listener: WebsocketListenerImpl[Seq[Ticker]]): Unit =
-		createNewWebSocket("!ticker@arr", listener)
 
+	def onAllTickerUpdateEvent(callback: Either[Exception, Seq[Ticker]] => Unit): WebSocket =
+		createNewWebSocket("!ticker@arr", new WebsocketListenerImpl(callback) with WebSocketCallbackImpl )
 
 	private def createNewWebSocket[T](channel: String, listener: WebsocketListenerImpl[T]) =
 		client.newWebSocket(
@@ -74,6 +63,22 @@ class WebsocketClientImpl extends Closeable {
 				.build,
 			listener
 		)
+
+	def handleClosing(webSocket: WebSocket, code: Int, reason: String): Unit = {
+
+	}
+
+	def handleOpen(webSocket: WebSocket, response: Response): Unit = {
+
+	}
+
+	def handleFailure(webSocket: WebSocket, t: Throwable, response: Response): Unit = {
+
+	}
+
+	def handleClosed(webSocket: WebSocket, code: Int, reason: String): Unit = {
+
+	}
 
 	@throws[IOException]
 	override def close(): Unit = client.dispatcher.executorService.shutdown()

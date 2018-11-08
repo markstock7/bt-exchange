@@ -47,7 +47,7 @@ object BuildSettings {
 				"com.typesafe.akka" %% "akka-actor" % "2.5.17",
 				"com.typesafe.play" %% "play" % "2.6.19",
 				"org.scalatest" %% "scalatest" % "3.0.5" % "test",
-				"org.scalactic" %% "scalactic" % "3.0.5",
+				"org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2" % "test",
 				btutil
 			) ++ Seq("core", "generic", "parser").map(s => "io.circe" %% s"circe-$s" % "0.9.0")
 		)
