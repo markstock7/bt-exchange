@@ -1,8 +1,10 @@
 package com.blocktrending.exchange.okex
 
 import java.io.{Closeable, IOException}
+
 import com.blocktrending.exchange.base.WebsocketListenerImpl
 import com.blocktrending.exchange.base.domain.{AggTrade, Candle, Depth, Ticker}
+import com.blocktrending.exchange.okex.domain.CandlestickInterval.CandlestickInterval
 import okhttp3._
 import play.api.libs.json.{JsValue, Json}
 import com.blocktrending.exchange.okex.json.SocketDecoders._
@@ -34,8 +36,8 @@ class WebsocketClientImpl extends Closeable {
 	def onAllTradeUpdateEvent(symbols: Seq[String])(callback: Either[Exception, AggTrade] => Unit): WebSocket =
 		createNewWebSocket(tradeChannel(symbols), new WebsocketListenerImpl(callback) with WebSocketCallbackImpl )
 
-	def onAllCandleUpdateEvent(symbols: Seq[String])(callback: Either[Exception, Candle] => Unit): WebSocket =
-		createNewWebSocket(candleChannel(symbols), new WebsocketListenerImpl(callback) with WebSocketCallbackImpl )
+	def onAllCandleUpdateEvent(symbols: Seq[String], interval: CandlestickInterval)(callback: Either[Exception, Candle] => Unit): WebSocket =
+		createNewWebSocket(candleChannel(symbols, interval), new WebsocketListenerImpl(callback) with WebSocketCallbackImpl )
 
 
 	private def createNewWebSocket[T](msg: String, listener: WebsocketListenerImpl[T]) = {
@@ -70,7 +72,7 @@ class WebsocketClientImpl extends Closeable {
 		Json.stringify{
 			Json.toJson(
 				symbols.map { symbol =>
-					ChannelCommand("addChannel", s"ok_sub_spot_${symbol}_depth")
+					ChannelCommand("addChannel", s"ok_sub_spot_${SymbolTransfer.s2l(symbol)}_depth")
 				}
 			)
 		}
@@ -80,7 +82,7 @@ class WebsocketClientImpl extends Closeable {
 		Json.stringify{
 			Json.toJson(
 				symbols.map { symbol =>
-					ChannelCommand("addChannel", s"ok_sub_spot_${symbol}_deals")
+					ChannelCommand("addChannel", s"ok_sub_spot_${SymbolTransfer.s2l(symbol)}_deals")
 				}
 			)
 		}
@@ -90,17 +92,17 @@ class WebsocketClientImpl extends Closeable {
 		Json.stringify{
 			Json.toJson(
 				symbols.map { symbol =>
-					ChannelCommand("addChannel", s"ok_sub_spot_${symbol}_ticker")
+					ChannelCommand("addChannel", s"ok_sub_spot_${SymbolTransfer.s2l(symbol)}_ticker")
 				}
 			)
 		}
 	}
 
-	private def candleChannel(symbols: Seq[String]): String = {
+	private def candleChannel(symbols: Seq[String], interval: CandlestickInterval): String = {
 		Json.stringify{
 			Json.toJson(
 				symbols.map { symbol =>
-					ChannelCommand("addChannel", s"ok_sub_spot_${symbol}_kline")
+					ChannelCommand("addChannel", s"ok_sub_spot_${SymbolTransfer.s2l(symbol)}_kline_$interval")
 				}
 			)
 		}

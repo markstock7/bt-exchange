@@ -7,11 +7,10 @@ import io.circe.Decoder
 
 object RestDecoders extends Decoders {
 
-	implicit lazy val NestedSymbolDecoder:    Decoder[NestedSymbol]         = Decoder.forProduct3(
-		"instrument_id",
+	implicit lazy val NestedSymbolDecoder:    Decoder[NestedSymbol]         = Decoder.forProduct2(
 		"base_currency",
 		"quote_currency"
-	)((symbol: String, base: String, quote: String) => NestedSymbol(symbol.split("-").mkString(""), base, quote))
+	)((base: String, quote: String) => NestedSymbol(s"$base/$quote", base, quote))
 
 	override implicit lazy val OrderBookEntryDecoder: Decoder[OrderBookEntry] =
 		Decoder.decodeTuple2[BigDecimal, BigDecimal].map {
@@ -27,5 +26,5 @@ object RestDecoders extends Decoders {
 	implicit lazy val CandleDecoder: Decoder[Candle] =
 		Decoder.forProduct6("close", "high", "low", "open", "time", "volume")((
 			close: Double, high: Double, low: Double, open: Double, time: String, volume: Double
-		) => Candle("", "", 1, Instant.parse(time).toEpochMilli, open, close, high, low, volume, 0, 0))
+		) => Candle("", "", Instant.parse(time).toEpochMilli, 1, open, close, high, low, volume, 0, 0))
 }
