@@ -11,7 +11,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class RestClientImpl(service: RestApiService)(implicit ex: ExecutionContext) extends IAsyncRestClient {
 
-	def ping: Future[Status] = symbols.map(_ => Status.OK).recover{ case e => Status.NON_RESPONSE }
+	def ping: Future[Status] = symbols.map(_ => Status.OK).recover { case e => Status.NON_RESPONSE }
 
 	def symbols: Future[Seq[NestedSymbol]] = RunRequest.apply1[Seq[NestedSymbol]](
 		service.instrument
@@ -26,6 +26,6 @@ class RestClientImpl(service: RestApiService)(implicit ex: ExecutionContext) ext
 				AsJava(end)
 			)
 		).map { candles =>
-			candles.map(c => c.copy(closeTime = c.closeTime + granularity * 1000))
+			candles.map(c => c.copy(closeTime = c.closeTime + granularity * 1000 - 1))
 		}
 }

@@ -1,6 +1,7 @@
 package com.blocktrending.exchange.base
 
 import play.api.libs.json.{Format, JsString, JsSuccess, JsValue}
+import play.api.mvc.QueryStringBindable
 
 object Exchange extends Enumeration {
 	type Exchange = Value
@@ -17,4 +18,10 @@ object Exchange extends Enumeration {
 		override def reads(json: JsValue) = JsSuccess(Exchange.withName(json.as[String]))
 		override def writes(o: Exchange.Exchange): JsValue = JsString(o.toString)
 	}
+
+	implicit object ExchangeQueryStringBinder extends QueryStringBindable.Parsing[Exchange.Exchange](
+		withName _,
+		_.toString,
+		(k: String, e: Exception) => "Cannot parse %s as Exchange: %s".format(k, e.getMessage())
+	)
 }
