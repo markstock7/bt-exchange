@@ -3,18 +3,18 @@ package com.blocktrending.exchange.okex.domain
 object CandlestickInterval extends Enumeration {
 	type CandlestickInterval = Value
 
-	val ONE_MINUTE = Value("1m")
-	val THREE_MINUTES = Value("3m")
-	val FIVE_MINUTES = Value("5m")
-	val FIFTEEN_MINUTES = Value("15m")
-	val HALF_HOURLY = Value("30m")
-	val HOURLY = Value("1h")
-	val TWO_HOURLY = Value("2h")
-	val FOUR_HOURLY = Value("4h")
-	val SIX_HOURLY = Value("6h")
-	val EIGHT_HOURLY = Value("8h")
-	val TWELEVE_HOURLY = Value("12h")
-	val DAILY = Value("1d")
+	val ONE_MINUTE = Value("1min")
+	val THREE_MINUTES = Value("3min")
+	val FIVE_MINUTES = Value("5min")
+	val FIFTEEN_MINUTES = Value("15min")
+	val HALF_HOURLY = Value("30min")
+	val HOURLY = Value("1hour")
+	val TWO_HOURLY = Value("2hour")
+	val FOUR_HOURLY = Value("4hour")
+	val SIX_HOURLY = Value("6hour")
+	val TWELEVE_HOURLY = Value("12hour")
+	val DAILY = Value("day")
+	val THREE_DAY = Value("3day")
 	val WEEKLY = Value("1w")
 
 	def interval2Period(interval: CandlestickInterval): Long = {
