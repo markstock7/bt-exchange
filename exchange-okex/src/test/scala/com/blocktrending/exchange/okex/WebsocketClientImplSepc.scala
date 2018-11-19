@@ -1,5 +1,6 @@
 package com.blocktrending.exchange.okex
 
+import com.blocktrending.exchange.okex.domain.CandlestickInterval
 import okhttp3.{Response, WebSocket}
 import org.scalatest._
 
@@ -67,11 +68,12 @@ class WebsocketClientImplSepc extends AsyncFlatSpec with Matchers {
 					p.success(assert(false))
 				}
 			}
-			client.onAllCandleUpdateEvent(Seq("bch_btc")) {
+			client.onAllCandleUpdateEvent(Seq("iost_btc"), CandlestickInterval.DAILY) {
 				case Left(e) =>
 					client.close()
 					p.success(assert(false))
 				case Right(payload) =>
+					println("payload", payload)
 					client.close()
 					if (!isInit)
 						p.success(assert(true))

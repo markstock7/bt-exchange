@@ -43,10 +43,10 @@ object SocketDecoders extends Decoders {
 			val data = c.downField("data")
 			for {
 				channel <- c.downField("channel").as[String]
-				price <- c.downArray.leftN(1).as[Double]
-				volume <- c.downArray.leftN(2).as[Double]
-				timestamp <- c.downArray.leftN(3).as[Long]
-				side <- c.downArray.leftN(3).as[String]
+				price <- data.downArray.rightN(1).as[Double]
+				volume <- data.downArray.rightN(2).as[Double]
+				timestamp <- data.downArray.rightN(3).as[Long]
+				side <- data.downArray.rightN(4).as[String]
 			} yield AggTrade(channel2Symbol(channel), price, volume, timestamp, side == "ask")
 		}
 	}
@@ -56,12 +56,12 @@ object SocketDecoders extends Decoders {
 			val data = c.downField("data")
 			for {
 				channel <- c.downField("channel").as[String]
-				openTime <- c.downArray.leftN(0).as[Long]
-				open <- c.downArray.leftN(1).as[Double]
-				high <- c.downArray.leftN(2).as[Double]
-				low <- c.downArray.leftN(3).as[Double]
-				close <- c.downArray.leftN(4).as[Double]
-				volume <- c.downArray.leftN(5).as[Double]
+				openTime <- data.downArray.downArray.rightN(0).as[Long]
+				open <- data.downArray.downArray.rightN(1).as[Double]
+				high <- data.downArray.downArray.rightN(2).as[Double]
+				low <- data.downArray.downArray.rightN(3).as[Double]
+				close <- data.downArray.downArray.rightN(4).as[Double]
+				volume <- data.downArray.downArray.rightN(5).as[Double]
 			} yield Candle(channel2Symbol(channel), "", openTime, 0, open, close, high, low, volume, 0 ,0 )
 		}
 	}

@@ -15,7 +15,8 @@ class WebsocketClientImpl extends Closeable {
 	trait WebSocketCallbackImpl extends WebSocketListener {
 		override def onMessage(webSocket: WebSocket, text: String): Unit = {
 			if (text == "{'event':'pong'}") println("Okex ping pong.")
-			if (text.indexOf("addChannel") == -1) {
+			// [{"binary":0,"channel":"addChannel","data":{"result":true,"channel":"ok_sub_spot_soc_eth_ticker"}}]
+			if (text.indexOf("result") == -1) {
 				Json.parse(text).as[Seq[JsValue]].foreach { text =>
 					super.onMessage(webSocket, text.toString)
 				}
@@ -64,11 +65,11 @@ class WebsocketClientImpl extends Closeable {
 		channel: String
 	)
 
-	private object ChannelCommand {
+	final private object ChannelCommand {
 		implicit val format = Json.format[ChannelCommand]
 	}
 
-	private def depthChannel(symbols: Seq[String]): String = {
+	final private def depthChannel(symbols: Seq[String]): String = {
 		Json.stringify{
 			Json.toJson(
 				symbols.map { symbol =>
@@ -78,7 +79,7 @@ class WebsocketClientImpl extends Closeable {
 		}
 	}
 
-	private def tradeChannel(symbols: Seq[String]): String = {
+	final private def tradeChannel(symbols: Seq[String]): String = {
 		Json.stringify{
 			Json.toJson(
 				symbols.map { symbol =>
@@ -88,7 +89,7 @@ class WebsocketClientImpl extends Closeable {
 		}
 	}
 
-	private def tickerChannel(symbols: Seq[String]): String = {
+	final private def tickerChannel(symbols: Seq[String]): String = {
 		Json.stringify{
 			Json.toJson(
 				symbols.map { symbol =>
@@ -98,7 +99,7 @@ class WebsocketClientImpl extends Closeable {
 		}
 	}
 
-	private def candleChannel(symbols: Seq[String], interval: CandlestickInterval): String = {
+	final private def candleChannel(symbols: Seq[String], interval: CandlestickInterval): String = {
 		Json.stringify{
 			Json.toJson(
 				symbols.map { symbol =>
