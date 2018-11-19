@@ -15,12 +15,15 @@ class WebsocketClientImplSepc extends AsyncFlatSpec with Matchers {
 		var isInit = false
 		Future {
 			val client = new WebsocketClientImpl {
+				override def handleOpen(webSocket: WebSocket, response: Response): Unit = {
+					println("socket open")
+				}
 				override def handleFailure(webSocket: WebSocket, t: Throwable, response: Response): Unit = {
 					t.printStackTrace()
 					p.success(assert(false))
 				}
 			}
-			client.onAllTickerUpdateEvent(Seq("bch_btc")) {
+			client.onAllTickerUpdateEvent(Seq("btc_usdt")) {
 				case Left(e) =>
 					client.close()
 					p.success(assert(false))
@@ -44,7 +47,7 @@ class WebsocketClientImplSepc extends AsyncFlatSpec with Matchers {
 					p.success(assert(false))
 				}
 			}
-			client.onAllDepthUpdateEvent(Seq("bch_btc")) {
+			client.onAllDepthUpdateEvent(Seq("btc_usdt")) {
 				case Left(e) =>
 					client.close()
 					p.success(assert(false))
@@ -68,7 +71,7 @@ class WebsocketClientImplSepc extends AsyncFlatSpec with Matchers {
 					p.success(assert(false))
 				}
 			}
-			client.onAllCandleUpdateEvent(Seq("iost_btc"), CandlestickInterval.DAILY) {
+			client.onAllCandleUpdateEvent(Seq("btc_usdt"), CandlestickInterval.DAILY) {
 				case Left(e) =>
 					client.close()
 					p.success(assert(false))
@@ -94,7 +97,7 @@ class WebsocketClientImplSepc extends AsyncFlatSpec with Matchers {
 					p.success(assert(false))
 				}
 			}
-			client.onAllTradeUpdateEvent(Seq("btc-usdt")) {
+			client.onAllTradeUpdateEvent(Seq("btc_usdt")) {
 				case Left(e) =>
 					client.close()
 					p.success(assert(false))

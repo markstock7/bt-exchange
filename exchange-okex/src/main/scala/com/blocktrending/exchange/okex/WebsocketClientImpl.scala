@@ -8,6 +8,7 @@ import com.blocktrending.exchange.okex.domain.CandlestickInterval.CandlestickInt
 import okhttp3._
 import play.api.libs.json.{JsValue, Json}
 import com.blocktrending.exchange.okex.json.SocketDecoders._
+import okio.ByteString
 
 class WebsocketClientImpl extends Closeable {
 	private val client: OkHttpClient = new OkHttpClient
@@ -16,11 +17,16 @@ class WebsocketClientImpl extends Closeable {
 		override def onMessage(webSocket: WebSocket, text: String): Unit = {
 			if (text == "{'event':'pong'}") println("Okex ping pong.")
 			// [{"binary":0,"channel":"addChannel","data":{"result":true,"channel":"ok_sub_spot_soc_eth_ticker"}}]
+			println(text)
 			if (text.indexOf("result") == -1) {
 				Json.parse(text).as[Seq[JsValue]].foreach { text =>
 					super.onMessage(webSocket, text.toString)
 				}
 			}
+		}
+
+		override def onMessage(webSocket: WebSocket, bytes: ByteString): Unit = {
+			println(uncompress(bytes.toByteArray))
 		}
 		override def onFailure(webSocket: WebSocket, t: Throwable, response: Response): Unit = handleFailure(webSocket, t, response)
 		override def onClosing(webSocket: WebSocket, code: Int, reason: String): Unit = handleClosing(webSocket, code, reason)
@@ -44,10 +50,13 @@ class WebsocketClientImpl extends Closeable {
 	private def createNewWebSocket[T](msg: String, listener: WebsocketListenerImpl[T]) = {
 		val socket = client.newWebSocket(
 			new Request.Builder()
-				.url("wss://real.okcoin.com:10440/websocket/okcoinapi")
+				.url("wss://real.okex.com:10441/websocket")
 				.build,
 			listener
 		)
+
+		println(msg)
+
 		socket send msg
 		socket
 	}
@@ -110,4 +119,25 @@ class WebsocketClientImpl extends Closeable {
 	}
 	@throws[IOException]
 	override def close(): Unit = client.dispatcher.executorService.shutdown()
+
+	import java.util.zip.Inflater
+
+	def uncompress(byteBuf: Array[Byte]): String = {
+		val appender = new StringBuilder
+		try {
+			val infl = new Inflater(true)
+			infl.setInput(byteBuf, 0, byteBuf.length)
+			val result = new Array[Byte](1024)
+			while ( {
+				!infl.finished
+			}) {
+				val length = infl.inflate(result)
+				appender.append(new String(result, 0, length, "UTF-8"))
+			}
+			infl.end()
+		} catch {
+			case e: Exception => e.printStackTrace()
+		}
+		appender.toString
+	}
 }
