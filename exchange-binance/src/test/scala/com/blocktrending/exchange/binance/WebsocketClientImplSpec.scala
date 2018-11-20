@@ -22,4 +22,21 @@ class WebsocketClientImplSpec extends AsyncFlatSpec with Matchers {
 		}
 		p.future
 	}
+
+	"onAllCandleUpdateEvent" should "Working Well" in {
+		val client = new WebsocketClientImpl
+		val p = Promise[Assertion]()
+		Future {
+			client.onCandleUpdateEvent(Seq("btcusdt"), "1h") {
+				case Left(e) =>
+					client.close()
+					p.success(assert(false))
+				case Right(payload) =>
+					client.close()
+					println(payload)
+					p.success(assert(true))
+			}
+		}
+		p.future
+	}
 }

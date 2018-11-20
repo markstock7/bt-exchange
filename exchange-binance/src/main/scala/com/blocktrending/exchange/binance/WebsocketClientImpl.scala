@@ -18,7 +18,7 @@ class WebsocketClientImpl extends Closeable {
 	}
 
 	def onAggTradeEventUpdate(symbol: String)(callback: Either[Exception, AggTrade] => Unit): WebSocket =
-		createNewWebSocket(s"$symbol@aggTrade", new WebsocketListenerImpl(callback) with WebSocketCallbackImpl )
+		createNewWebSocket(s"${symbol.toLowerCase}@aggTrade", new WebsocketListenerImpl(callback) with WebSocketCallbackImpl )
 
 	def onTradeEventUpdate(symbol: String)(callback: Either[Exception, AggTrade] => Unit): WebSocket =
 		createNewWebSocket(s"$symbol@trade", new WebsocketListenerImpl(callback) with WebSocketCallbackImpl )
@@ -42,7 +42,7 @@ class WebsocketClientImpl extends Closeable {
 
 
 	def onCandleUpdateEvent(symbols: Seq[String], interval: String)(callback: Either[Exception, Candle] => Unit): WebSocket =
-		createNewCombainSocket(symbols.map(symbol => s"$symbol@kline_$interval"), new WebsocketListenerImpl(callback) with WebSocketCallbackImpl )
+		createNewCombainSocket(symbols.map(symbol => s"${symbol.toLowerCase}@kline_$interval"), new WebsocketListenerImpl(callback) with WebSocketCallbackImpl )
 
 
 	def onAllTickerUpdateEvent(callback: Either[Exception, Seq[Ticker]] => Unit): WebSocket =

@@ -14,19 +14,16 @@ class WebsocketClientImpl extends Closeable {
 	private val client: OkHttpClient = new OkHttpClient
 
 	trait WebSocketCallbackImpl extends WebSocketListener {
-		override def onMessage(webSocket: WebSocket, text: String): Unit = {
-			if (text == "{'event':'pong'}") println("Okex ping pong.")
-			// [{"binary":0,"channel":"addChannel","data":{"result":true,"channel":"ok_sub_spot_soc_eth_ticker"}}]
-			println(text)
-			if (text.indexOf("result") == -1) {
+		override def onMessage(webSocket: WebSocket, bytes: ByteString): Unit = {
+			val text = uncompress(bytes.toByteArray)
+
+			if (text.indexOf("pong") != -1) {
+				println("Okex ping pong.")
+			} else if (text.indexOf("result") == -1) {
 				Json.parse(text).as[Seq[JsValue]].foreach { text =>
 					super.onMessage(webSocket, text.toString)
 				}
 			}
-		}
-
-		override def onMessage(webSocket: WebSocket, bytes: ByteString): Unit = {
-			println(uncompress(bytes.toByteArray))
 		}
 		override def onFailure(webSocket: WebSocket, t: Throwable, response: Response): Unit = handleFailure(webSocket, t, response)
 		override def onClosing(webSocket: WebSocket, code: Int, reason: String): Unit = handleClosing(webSocket, code, reason)
@@ -54,9 +51,6 @@ class WebsocketClientImpl extends Closeable {
 				.build,
 			listener
 		)
-
-		println(msg)
-
 		socket send msg
 		socket
 	}
