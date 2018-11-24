@@ -10,28 +10,19 @@ class WebsocketClientImplSepc extends AsyncFlatSpec with Matchers {
 
 	println("OKEX 客户端测试.")
 
+
 	"[OKEX] onAllTickerUpdateEvent" should "Working Well" in {
 		val p = Promise[Assertion]()
 		var isInit = false
 		Future {
-			val client = new WebsocketClientImpl {
-				override def handleOpen(webSocket: WebSocket, response: Response): Unit = {
-					println("socket open")
-				}
-				override def handleFailure(webSocket: WebSocket, t: Throwable, response: Response): Unit = {
-					t.printStackTrace()
-					p.success(assert(false))
-				}
-			}
+			val client = new WebsocketClientImpl
 			client.onAllTickerUpdateEvent(Seq("btc_usdt")) {
 				case Left(e) =>
 					client.close()
 					p.success(assert(false))
 				case Right(ticker) =>
 					client.close()
-					if (!isInit)
-						p.success(assert(true))
-						isInit = true
+					p.success(assert(true))
 			}
 		}
 		p.future
@@ -53,9 +44,7 @@ class WebsocketClientImplSepc extends AsyncFlatSpec with Matchers {
 					p.success(assert(false))
 				case Right(payload) =>
 					client.close()
-					if (!isInit)
-						p.success(assert(true))
-						isInit = true
+					p.success(assert(true))
 			}
 		}
 		p.future
@@ -76,11 +65,8 @@ class WebsocketClientImplSepc extends AsyncFlatSpec with Matchers {
 					client.close()
 					p.success(assert(false))
 				case Right(payload) =>
-					println("payload", payload)
+					p.success(assert(true))
 					client.close()
-					if (!isInit)
-						p.success(assert(true))
-						isInit = true
 
 			}
 		}
@@ -102,10 +88,8 @@ class WebsocketClientImplSepc extends AsyncFlatSpec with Matchers {
 					client.close()
 					p.success(assert(false))
 				case Right(payload) =>
+					p.success(assert(true))
 					client.close()
-					if (!isInit)
-						p.success(assert(true))
-						isInit = true
 			}
 		}
 		p.future

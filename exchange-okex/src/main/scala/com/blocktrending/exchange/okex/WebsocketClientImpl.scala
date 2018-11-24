@@ -1,8 +1,9 @@
 package com.blocktrending.exchange.okex
 
 import java.io.{Closeable, IOException}
+import java.util.logging.{Level, Logger}
 
-import com.blocktrending.exchange.base.WebsocketListenerImpl
+import com.blocktrending.exchange.base.{Exchange, WebsocketClientHandle, WebsocketListenerImpl}
 import com.blocktrending.exchange.base.domain.{AggTrade, Candle, Depth, Ticker}
 import com.blocktrending.exchange.okex.domain.CandlestickInterval.CandlestickInterval
 import okhttp3._
@@ -10,8 +11,13 @@ import play.api.libs.json.{JsValue, Json}
 import com.blocktrending.exchange.okex.json.SocketDecoders._
 import okio.ByteString
 
-class WebsocketClientImpl extends Closeable {
+class WebsocketClientImpl extends Closeable with WebsocketClientHandle {
 	private val client: OkHttpClient = new OkHttpClient
+	val exchange = Exchange.OKEX
+
+	import okhttp3.OkHttpClient
+
+	Logger.getLogger(classOf[OkHttpClient].getName).setLevel(Level.FINE)
 
 	trait WebSocketCallbackImpl extends WebSocketListener {
 		override def onMessage(webSocket: WebSocket, bytes: ByteString): Unit = {
@@ -54,14 +60,6 @@ class WebsocketClientImpl extends Closeable {
 		socket send msg
 		socket
 	}
-
-	protected def handleClosing(webSocket: WebSocket, code: Int, reason: String): Unit = {}
-
-	protected def handleOpen(webSocket: WebSocket, response: Response): Unit = {}
-
-	protected def handleFailure(webSocket: WebSocket, t: Throwable, response: Response): Unit = {}
-
-	protected def handleClosed(webSocket: WebSocket, code: Int, reason: String): Unit = {}
 
 	private case class ChannelCommand(
 		event: String,
@@ -111,6 +109,7 @@ class WebsocketClientImpl extends Closeable {
 			)
 		}
 	}
+
 	@throws[IOException]
 	override def close(): Unit = client.dispatcher.executorService.shutdown()
 

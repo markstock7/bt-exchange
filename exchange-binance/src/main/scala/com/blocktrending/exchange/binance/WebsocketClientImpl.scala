@@ -2,13 +2,14 @@ package com.blocktrending.exchange.binance
 
 import java.io.{Closeable, IOException}
 
-import com.blocktrending.exchange.base.WebsocketListenerImpl
+import com.blocktrending.exchange.base.{Exchange, WebsocketClientHandle, WebsocketListenerImpl}
 import com.blocktrending.exchange.base.domain.{AggTrade, Candle, Depth, Ticker}
 import okhttp3._
 import com.blocktrending.exchange.binance.json.SocketDecoders._
 
-class WebsocketClientImpl extends Closeable {
+class WebsocketClientImpl extends Closeable with WebsocketClientHandle {
 	private val client: OkHttpClient = new OkHttpClient
+	val exchange = Exchange.BINANCE
 
 	trait WebSocketCallbackImpl extends WebSocketListener {
 		override def onFailure(webSocket: WebSocket, t: Throwable, response: Response): Unit = handleFailure(webSocket, t, response)
@@ -38,7 +39,7 @@ class WebsocketClientImpl extends Closeable {
 
 
 	def onTickerUpdateEvent(symbol: String)(callback: Either[Exception, Ticker] => Unit): WebSocket =
-		createNewWebSocket(s"$symbol@ticker", new WebsocketListenerImpl(callback) with WebSocketCallbackImpl )
+		createNewWebSocket(s"$symbol@ticker", new WebsocketListenerImpl(callback) with WebSocketCallbackImpl)
 
 
 	def onCandleUpdateEvent(symbols: Seq[String], interval: String)(callback: Either[Exception, Candle] => Unit): WebSocket =
@@ -56,28 +57,14 @@ class WebsocketClientImpl extends Closeable {
 			listener
 		)
 
-	private def createNewCombainSocket[T](channels: Seq[String], listener: WebsocketListenerImpl[T]) =
+	private def createNewCombainSocket[T](channels: Seq[String], listener: WebsocketListenerImpl[T]) = {
+		println(channels)
 		client.newWebSocket(
 			new Request.Builder()
 				.url(s"wss://stream.binance.com:9443/stream?streams=${channels.mkString("/")}")
 				.build,
 			listener
 		)
-
-	def handleClosing(webSocket: WebSocket, code: Int, reason: String): Unit = {
-
-	}
-
-	def handleOpen(webSocket: WebSocket, response: Response): Unit = {
-
-	}
-
-	def handleFailure(webSocket: WebSocket, t: Throwable, response: Response): Unit = {
-
-	}
-
-	def handleClosed(webSocket: WebSocket, code: Int, reason: String): Unit = {
-
 	}
 
 	@throws[IOException]

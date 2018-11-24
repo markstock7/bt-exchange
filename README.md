@@ -11,3 +11,4 @@ https://www.scala-sbt.org/release/docs/Using-Sonatype.html
 
 
 docker run -it -p 30303:30303 -v /Volumes/MarkStock:/root/.ethereum ethereum/client-go --rpc --rpcaddr "0.0.0.0"
+

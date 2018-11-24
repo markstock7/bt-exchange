@@ -5,3 +5,4 @@ case class NestedSymbol (
 	baseAsset: String,
 	quoteAsset: String
 )
+

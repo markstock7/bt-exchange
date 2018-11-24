@@ -89,7 +89,7 @@ object SocketDecoders extends Decoders {
 
 
 //
-//	{
+//	data : {
 //		"e": "kline",     // Event type
 //		"E": 123456789,   // Event time
 //		"s": "BNBBTC",    // Symbol
