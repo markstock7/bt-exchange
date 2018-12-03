@@ -22,7 +22,7 @@ class RestClientImpl(service: RestApiService)(implicit ex: ExecutionContext) ext
 
 	override def symbols: Future[Seq[NestedSymbol]] = RunRequest.apply1[ExchangeInfo](
 		service.exchangeInfo
-	).map(_.symbols)
+	).map(_.result)
 
 	def depth(
 		symbol: String,
