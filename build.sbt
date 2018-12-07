@@ -8,7 +8,8 @@ lazy val root =(project in file("."))
     `exchange-binance`,
     `exchange-okex`,
     `exchange-bitfinex`,
-    `exchange-bibox`
+    `exchange-bibox`,
+    `exchange-bittrex`
   )
 
 lazy val `exchange-base`          = module("exchange-base", Seq())
@@ -22,6 +23,8 @@ lazy val `exchange-bitfinex`      = module("exchange-bitfinex", Seq(`exchange-ba
 lazy val `exchange-huobipro`      = module("exchange-huobipro", Seq(`exchange-base`))
 
 lazy val `exchange-bibox`         = module("exchange-bibox", Seq(`exchange-base`))
+
+lazy val `exchange-bittrex`         = module("exchange-bittrex", Seq(`exchange-base`))
 
 lazy val assemblySettings = Seq(
   assemblyJarName in assembly := name.value + ".jar",
