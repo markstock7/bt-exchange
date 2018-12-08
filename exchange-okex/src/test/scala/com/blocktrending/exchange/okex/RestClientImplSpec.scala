@@ -20,7 +20,7 @@ class RestClientImplSpec extends AsyncFlatSpec with Matchers {
 
   "candles" should "return non empty results" in {
     restClient
-      .candlesWithPair("BTC-CVC", CandlestickInterval.DAILY, System.currentTimeMillis().toString)
+      .candlesWithPair("LTC-USDT", CandlestickInterval.DAILY, "", "")
       .map { candles =>
         assert(candles.nonEmpty)
       }
@@ -28,7 +28,7 @@ class RestClientImplSpec extends AsyncFlatSpec with Matchers {
 
   "tickersWithPair" should "return non empty results" in {
     restClient
-      .tickersWithPair("BTC-CVC")
+      .tickersWithPair("LTC-USDT")
       .map { ticker =>
         assert(ticker.isInstanceOf[Ticker])
       }
@@ -44,7 +44,7 @@ class RestClientImplSpec extends AsyncFlatSpec with Matchers {
 
   "depthWithPair" should "return non empty results" in {
     restClient
-      .depthsWithPair("BTC-CVC")
+      .depthsWithPair("LTC-USDT")
       .map { depeth =>
         assert(depeth.isInstanceOf[Depth])
       }

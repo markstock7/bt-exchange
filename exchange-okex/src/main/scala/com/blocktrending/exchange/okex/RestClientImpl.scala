@@ -11,31 +11,44 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class RestClientImpl(service: RestApiService)(implicit ex: ExecutionContext)
     extends IAsyncRestClient {
+  // symbols
+
+  // candles
+  // candlesWithPair
+
+  // Tickers
+  // TickersWithPair
+
+  // trades
+  // tradesWithPair
+
+  // Depths
+  // DepthsWithPair
 
   // symbols
   override def symbols: Future[Seq[NestedSymbol]] =
-    RunRequest.apply1[PairResponse](
+    RunRequest.apply1[Seq[NestedSymbol]](
       service.pairList
-    ).map(_.result)
+  )
 
   // candles
-  def candlesWithPair(pair: String, period: CandlestickInterval, time: String): Future[Seq[Candle]] =
-    RunRequest.apply1[CandleResponse](
-      service.candlesWithPair(pair, period.toString, time)
-    ).map(_.result).map(candles => candles.map(candle =>
+  def candlesWithPair(pair: String, period: CandlestickInterval, start: String, end: String): Future[Seq[Candle]] =
+    RunRequest.apply1[Seq[Candle]](
+      service.candlesWithPair(pair, period.toString, start, end)
+    ).map(candles => candles.map(candle =>
       candle.copy(symbol = pair, interval = period.toString, closeTime = candle.openTime + CandlestickInterval.interval2Period(period))
     ))
 
   // tickers
   def tickersWithPair(pair: String): Future[Ticker] =
-    RunRequest.apply1[TickersResponse](
+    RunRequest.apply1[Ticker](
       service.tickersWithPair(pair)
-    ).map(_.result.head)
+    )
 
   def tickers: Future[Seq[Ticker]] =
-    RunRequest.apply1[TickersResponse](
+    RunRequest.apply1[Seq[Ticker]](
       service.tickers
-    ).map(_.result)
+    )
 
   // Trade history
   // TODO 没有找到官方公布的内容

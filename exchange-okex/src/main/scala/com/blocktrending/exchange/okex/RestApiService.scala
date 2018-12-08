@@ -8,45 +8,76 @@ trait RestApiService {
 
   /**
     * {
-    * "success" : true,
-    * "message" : "",
-    * "result" : [{
-    * "MarketCurrency" : "LTC",
-    * "BaseCurrency" : "BTC",
-    * "MarketCurrencyLong" : "Litecoin",
-    * "BaseCurrencyLong" : "Bitcoin",
-    * "MinTradeSize" : 0.01000000,
-    * "MarketName" : "BTC-LTC",
-    * "IsActive" : true,
-    * "Created" : "2014-02-13T00:00:00"
-    * }
+[{
+"instrument_id": "BTC-USDT",
+
+"base_currency": "BTC",
+
+"quote_currency": "USDT",
+
+"min_size": "0.001",
+
+"size_increment": "0.00000001",
+
+"tick_size": "0.0001"
+}]
     * ]}
     **/
-  @GET("/api/v1.1/public/getmarkets")
+  @GET("/api/spot/v3/instruments")
   def pairList: Call[ResponseBody]
+
+  // 官方也没有限制条数，时间戳也只是可能，看了 bittrex 官方也是用的这个接口，没有加时间戳，一次性取回了全部数据
+  /**{
+    success : true,
+    message : "",
+    result : [ // Array of candle objects.
+{
+"close":7071.1913,
+"high":7072.7999,
+"low":7061.7,
+"open":7067.9008,
+"time":"2018-08-05T10:00:00.000Z",
+"volume":68.4532745
+},
+]
+  }**/
+  @GET("/api/spot/v3/instruments/{symbol}/candles")
+  def candlesWithPair(
+      // 系统支持的交易对 格式为： LTC-USDT
+      @Path("symbol") symbol: String,
+      // must be in [60 180 300 900 1800 3600 7200 14400 21600 43200 86400 604800]
+      // 这些值分别对应的是[1min 3min 5min 15min 30min 1hour 2hour 4hour 6hour 12hour 1day 1week]的时间段
+      @Query("granularity") granularity: String,
+      @Query("start") start: String, // 时间戳
+      @Query("end") end: String
+  ): Call[ResponseBody]
 
   /** {
     * "success" : true,
     * "message" : "",
     * "result" : [{
-    * "MarketName" : "BTC-888",
-    * "High" : 0.00000919,
-    * "Low" : 0.00000820,
-    * "Volume" : 74339.61396015,
-    * "Last" : 0.00000820,
-    * "BaseVolume" : 0.64966963,
-    * "TimeStamp" : "2014-07-09T07:19:30.15",
-    * "Bid" : 0.00000820,
-    * "Ask" : 0.00000831,
-    * "OpenBuyOrders" : 15,
-    * "OpenSellOrders" : 15,
-    * "PrevDay" : 0.00000821,
-    * "Created" : "2014-03-20T06:00:00",
-    * "DisplayMarketName" : null
+"instrument_id": "BTC-USDT",
+
+"last": "333.99",
+
+"best_bid": "333.98",
+
+"best_ask": "333.99",
+"open_24h": "0.193",
+"high_24h": "0.193",
+
+"low_24h": "333.98",
+
+"base_volume_24h": "5957.11914015",
+
+"quote_volume_24h": "5957.11914015",
+
+"timestamp": "2015-11-14T20:46:03.511Z"
+
     * }
     * ]
     * } **/
-  @GET("/api/v1.1/public/getmarketsummaries")
+  @GET("/api/spot/v3/instruments/ticker")
   def tickers: Call[ResponseBody]
 
   /**
@@ -54,73 +85,49 @@ trait RestApiService {
     * "success" : true,
     * "message" : "",
     * "result" : [{
-    * "MarketName" : "BTC-888",
-    * "High" : 0.00000919,
-    * "Low" : 0.00000820,
-    * "Volume" : 74339.61396015,
-    * "Last" : 0.00000820,
-    * "BaseVolume" : 0.64966963,
-    * "TimeStamp" : "2014-07-09T07:19:30.15",
-    * "Bid" : 0.00000820,
-    * "Ask" : 0.00000831,
-    * "OpenBuyOrders" : 15,
-    * "OpenSellOrders" : 15,
-    * "PrevDay" : 0.00000821,
-    * "Created" : "2014-03-20T06:00:00",
-    * "DisplayMarketName" : null
+“instrument_id": "BTC-USDT",
+
+"last": "333.99",
+
+"best_bid": "333.98",
+
+"best_ask": "333.99",
+
+"high_24h": "0.193",
+
+"open_24h": "0.193",
+
+"low_24h": "333.98",
+
+"base_volume_24h": "5957.11914015",
+
+"quote_volume_24h": "5957.11914015",
+
+"timestamp": "2015-11-14T20:46:03.511Z"
     * }
     **/
-  @GET("/api/v1.1/public/getmarketsummaries")
+  @GET("/api/spot/v3/instruments/{symbol}/ticker")
   def tickersWithPair(
-    // 系统支持的交易对 格式为： BTC-CVC
-    @Query("marketName") marketName: String,
-    ): Call[ResponseBody]
+      // 系统支持的交易对 格式为： LTC-USDT
+      @Path("symbol") symbol: String,
+  ): Call[ResponseBody]
 
   /** {
-  "success" : true,
-  "message" : "",
-  "result" : {
-    "buy" : [{
-        "Quantity" : 12.37000000,
-        "Rate" : 0.02525000
-      }
-    ],
-    "sell" : [{
-        "Quantity" : 32.55412402,
-        "Rate" : 0.02540000
-      }, {
-        "Quantity" : 84.00000000,
-        "Rate" : 0.02600000
-      }
-    ]
+{
+  "timestamp": "2016-12-08T20:09:05.508Z",
+  "bids": [
+    [ price, size, num_orders ],
+    [ "295.96", "4.39088265", 2 ],
+  ],
+  "asks": [
+    [ price, size, num_orders ],
+    [ "295.97", "25.23542881", 12 ],
+  ]
+}
   }**/
-  @GET("/api/v1.1/public/getorderbook?type=both")
+  @GET("/api/spot/v3/instruments/{symbol}/book")
   def depthsWithPair(
-    // 系统支持的交易对 格式为： BTC-CVC
-    @Query("market") market: String,
-    ): Call[ResponseBody]
-
-  // 官方也没有限制条数，时间戳也只是可能，看了 bittrex 官方也是用的这个接口，没有加时间戳，一次性取回了全部数据
-  /**{
-    success : true,
-    message : "",
-    result : [ // Array of candle objects.
-    {
-      BV: 13.14752793,          // base volume
-      C: 0.000121,              // close
-      H: 0.00182154,            // high
-      L: 0.0001009,             // low
-      O: 0.00182154,            // open
-      T: "2017-07-16T23:00:00", // timestamp
-      V: 68949.3719684          // 24h volume
-    }]
-  }**/
-  @GET("/Api/v2.0/pub/market/GetTicks")
-  def candlesWithPair(
-      // 系统支持的交易对 格式为： BTC-CVC
-      @Query("marketName") marketName: String,
-      // must be in [“oneMin”, “fiveMin”, “thirtyMin”, “hour”, “day”]
-      @Query("tickInterval") tickInterval: String,
-      @Query("_") time: String // 时间戳
+      // 系统支持的交易对 格式为： LTC-USDT
+      @Path("symbol") symbol: String,
   ): Call[ResponseBody]
 }
