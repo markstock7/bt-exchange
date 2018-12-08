@@ -4,7 +4,7 @@ import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http._
 
-trait RestApiService1 {
+trait RestApiService {
 
   /**
     * {
@@ -22,7 +22,7 @@ trait RestApiService1 {
     * }
     * ]}
     **/
-  @GET("public/getmarkets")
+  @GET("/api/v1.1/public/getmarkets")
   def pairList: Call[ResponseBody]
 
   /** {
@@ -46,7 +46,7 @@ trait RestApiService1 {
     * }
     * ]
     * } **/
-  @GET("public/getmarketsummaries")
+  @GET("/api/v1.1/public/getmarketsummaries")
   def tickers: Call[ResponseBody]
 
   /**
@@ -70,7 +70,7 @@ trait RestApiService1 {
     * "DisplayMarketName" : null
     * }
     **/
-  @GET("public/getmarketsummaries")
+  @GET("/api/v1.1/public/getmarketsummaries")
   def tickersWithPair(
     // 系统支持的交易对 格式为： BTC-CVC
     @Query("marketName") marketName: String,
@@ -94,14 +94,11 @@ trait RestApiService1 {
 			}
 		]
 	}**/
-  @GET("public/getorderbook?type=both")
+  @GET("/api/v1.1/public/getorderbook?type=both")
   def depthsWithPair(
     // 系统支持的交易对 格式为： BTC-CVC
     @Query("market") market: String,
     ): Call[ResponseBody]
-}
-
-trait RestApiService2 {
 
 	// 官方也没有限制条数，时间戳也只是可能，看了 bittrex 官方也是用的这个接口，没有加时间戳，一次性取回了全部数据
   /**{
@@ -118,7 +115,7 @@ trait RestApiService2 {
       V: 68949.3719684          // 24h volume
     }]
   }**/
-  @GET("market/GetTicks")
+  @GET("/Api/v2.0/pub/market/GetTicks")
   def candlesWithPair(
       // 系统支持的交易对 格式为： BTC-CVC
       @Query("marketName") marketName: String,

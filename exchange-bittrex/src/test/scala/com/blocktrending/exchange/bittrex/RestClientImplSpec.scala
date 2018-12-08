@@ -20,7 +20,7 @@ class RestClientImplSpec extends AsyncFlatSpec with Matchers {
 
   "candles" should "return non empty results" in {
     restClient
-      .candles("BTC-CVC", CandlestickInterval.DAILY, System.currentTimeMillis().toString)
+      .depthsWithPair("BTC-CVC", CandlestickInterval.DAILY, System.currentTimeMillis().toString)
       .map { candles =>
         assert(candles.nonEmpty)
       }
