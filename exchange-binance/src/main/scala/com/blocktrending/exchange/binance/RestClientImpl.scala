@@ -24,7 +24,7 @@ class RestClientImpl(service: RestApiService)(implicit ex: ExecutionContext) ext
 		service.exchangeInfo
 	).map(_.symbols)
 
-	def depthWithPair(
+	def depthsWithPair(
 		symbol: String,
 		limit: Option[Int]
 	): Future[Depth] = RunRequest.apply1[Depth](
@@ -47,7 +47,7 @@ class RestClientImpl(service: RestApiService)(implicit ex: ExecutionContext) ext
 		)
 	}
 
-	def tradesWithPire(
+	def tradesWithPair(
 		symbol: String,
 		limit: Option[Int] = None
 	): Future[Seq[AggTrade]] = Trades.trades(symbol, limit)

@@ -40,13 +40,13 @@ class RestClientImplSpec extends AsyncFlatSpec with Matchers {
   }
 
   "depth" should "has symbol" in {
-    restClient.depthWithPair("BTCUSDT", None).map { depth =>
+    restClient.depthsWithPair("BTCUSDT", None).map { depth =>
       assert(depth.symbol == "BTCUSDT")
     }
   }
 
   "trades" should "return non empty results" in {
-    restClient.tradesWithPire("BTCUSDT").map { aggTrades =>
+    restClient.tradesWithPair("BTCUSDT").map { aggTrades =>
       assert(aggTrades.nonEmpty)
     }
   }
