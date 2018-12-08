@@ -1,4 +1,4 @@
-package com.blocktrending.exchange.bittrex
+package com.blocktrending.exchange.huobipro
 
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -77,30 +77,30 @@ trait RestApiService {
     ): Call[ResponseBody]
 
   /** {
-	"success" : true,
-	"message" : "",
-	"result" : {
-		"buy" : [{
-				"Quantity" : 12.37000000,
-				"Rate" : 0.02525000
-			}
-		],
-		"sell" : [{
-				"Quantity" : 32.55412402,
-				"Rate" : 0.02540000
-			}, {
-				"Quantity" : 84.00000000,
-				"Rate" : 0.02600000
-			}
-		]
-	}**/
+  "success" : true,
+  "message" : "",
+  "result" : {
+    "buy" : [{
+        "Quantity" : 12.37000000,
+        "Rate" : 0.02525000
+      }
+    ],
+    "sell" : [{
+        "Quantity" : 32.55412402,
+        "Rate" : 0.02540000
+      }, {
+        "Quantity" : 84.00000000,
+        "Rate" : 0.02600000
+      }
+    ]
+  }**/
   @GET("/api/v1.1/public/getorderbook?type=both")
   def depthsWithPair(
     // 系统支持的交易对 格式为： BTC-CVC
     @Query("market") market: String,
     ): Call[ResponseBody]
 
-	// 官方也没有限制条数，时间戳也只是可能，看了 bittrex 官方也是用的这个接口，没有加时间戳，一次性取回了全部数据
+  // 官方也没有限制条数，时间戳也只是可能，看了 bittrex 官方也是用的这个接口，没有加时间戳，一次性取回了全部数据
   /**{
     success : true,
     message : "",

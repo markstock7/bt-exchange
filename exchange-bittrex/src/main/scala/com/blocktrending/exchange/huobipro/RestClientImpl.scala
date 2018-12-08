@@ -1,10 +1,10 @@
-package com.blocktrending.exchange.bittrex
+package com.blocktrending.exchange.huobipro
 
 import com.blocktrending.exchange.base.{IAsyncRestClient}
 import com.blocktrending.exchange.base.domain._
-import com.blocktrending.exchange.bittrex.domain.CandlestickInterval.CandlestickInterval
-import com.blocktrending.exchange.bittrex.domain._
-import com.blocktrending.exchange.bittrex.json.RestDecoders._
+import com.blocktrending.exchange.huobipro.domain.CandlestickInterval.CandlestickInterval
+import com.blocktrending.exchange.huobipro.domain._
+import com.blocktrending.exchange.huobipro.json.RestDecoders._
 import com.blocktrending.util.http.RunRequest
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -19,11 +19,11 @@ class RestClientImpl(service: RestApiService)(implicit ex: ExecutionContext)
     ).map(_.result)
 
   // candles
-  def depthsWithPair(pair: String, period: CandlestickInterval, time: String): Future[Seq[Candle]] =
+  def candlesWithPair(pair: String, period: CandlestickInterval, time: String): Future[Seq[Candle]] =
     RunRequest.apply1[CandleResponse](
       service.candlesWithPair(pair, period.toString, time)
     ).map(_.result).map(candles => candles.map(candle =>
-      candle.copy(symbol = pair, interval = period.toString, openTime = candle.openTime + CandlestickInterval.interval2Period(period))
+      candle.copy(symbol = pair, interval = period.toString, closeTime = candle.openTime + CandlestickInterval.interval2Period(period))
     ))
 
   // tickers
