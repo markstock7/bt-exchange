@@ -10,6 +10,4 @@ class ClientFactory(implicit ex: ExecutionContext) {
 	}
 
 	def newAsyncRestClient = new RestClientImpl(service)
-
-	def newWebSocketClient = new WebsocketClientImpl
 }

@@ -13,16 +13,6 @@ import scala.concurrent.{ExecutionContext, Future}
 class RestClientImpl(service: RestApiService)(implicit ex: ExecutionContext)
     extends IAsyncRestClient {
 
-  def ping: Future[Status] =
-    RunRequest
-      .apply1[ServerTimeResponse](
-      service.ping
-    )
-      .map(_ => Status.OK)
-      .recover {
-        case _ => Status.NON_RESPONSE
-      }
-
   override def symbols: Future[Seq[NestedSymbol]] =
     RunRequest.apply1[PairResponse](
       service.pairList
@@ -32,4 +22,21 @@ class RestClientImpl(service: RestApiService)(implicit ex: ExecutionContext)
     RunRequest.apply1[CandleRepsonse](
       service.candlesWithPair(pair, "30min", size)
     ).map(_.result).map(candles => candles.map(_.copy(symbol = pair, interval = period.toString)))
+
+  // tickers
+  def tickersWithPair(pair: String): Future[Ticker] =
+    RunRequest.apply1[TickerResponse](
+      service.tickersWithPair(pair)
+    ).map(_.result)
+
+  def tickers: Future[Seq[Ticker]] =
+    RunRequest.apply1[TickersResponse](
+      service.tickers
+    ).map(_.result)
+
+  // depth
+  def depthsWithPair(pair: String): Future[Depth] =
+    RunRequest.apply1[DepthResponse](
+      service.depthsWithPair(pair, 200)
+    ).map(_.result)
 }

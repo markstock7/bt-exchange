@@ -6,9 +6,6 @@ import retrofit2.http._
 
 trait RestApiService {
 
-  @GET("v1/public?cmd=ping")
-  def ping: Call[ResponseBody]
-
   /*
   * {
     "result":[
@@ -57,7 +54,7 @@ trait RestApiService {
   ): Call[ResponseBody]
 
   @GET("/v1/mdata?cmd=depth")
-  def depthWithPair(
+  def depthsWithPair(
       @Query("pair")   pair: String,
       @Query("size")   size: Integer // 1-200
   ): Call[ResponseBody]
@@ -69,8 +66,11 @@ trait RestApiService {
       @Query("size")   size: Integer // 1-200
   ): Call[ResponseBody]
 
-	@GET("/api/v1/ticker/24hr")
-	def ticker24hr(
+	@GET("/v1/mdata?cmd=marketAll")
+	def tickers: Call[ResponseBody]
+
+	@GET("/v1/mdata?cmd=market")
+	def tickersWithPair(
       @Query("pair")   pair: String,
   ): Call[ResponseBody]
 }
