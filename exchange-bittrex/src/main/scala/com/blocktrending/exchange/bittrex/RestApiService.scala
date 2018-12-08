@@ -95,7 +95,7 @@ trait RestApiService1 {
 		]
 	}**/
   @GET("public/getorderbook?type=both")
-  def depathWithPair(
+  def depthsWithPair(
     // 系统支持的交易对 格式为： BTC-CVC
     @Query("market") market: String,
     ): Call[ResponseBody]

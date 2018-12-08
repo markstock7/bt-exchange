@@ -44,7 +44,7 @@ class RestClientImplSpec extends AsyncFlatSpec with Matchers {
 
   "depthWithPair" should "return non empty results" in {
     restClient
-      .depthWithPair("BTC-CVC")
+      .depthsWithPair("BTC-CVC")
       .map { depeth =>
         assert(depeth.isInstanceOf[Depth])
       }

@@ -41,9 +41,9 @@ class RestClientImpl(service1: RestApiService1, service2: RestApiService2)(impli
   // TODO 没有找到官方公布的内容
 
   // depth
-  def depthWithPair(pair: String): Future[Depth] =
+  def depthsWithPair(pair: String): Future[Depth] =
     RunRequest.apply1[Depth](
-      service1.depathWithPair(pair)
+      service1.depthsWithPair(pair)
     )
 
   // def depths: Future[Seq[Depth]] =
