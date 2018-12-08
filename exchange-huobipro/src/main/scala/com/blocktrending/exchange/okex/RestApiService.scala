@@ -1,4 +1,4 @@
-package com.blocktrending.exchange.huobipro
+package com.blocktrending.exchange.okex
 
 import okhttp3.ResponseBody
 import retrofit2.Call

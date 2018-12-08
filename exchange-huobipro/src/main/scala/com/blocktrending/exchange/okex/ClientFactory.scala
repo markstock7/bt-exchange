@@ -1,4 +1,4 @@
-package com.blocktrending.exchange.huobipro
+package com.blocktrending.exchange.okex
 
 import retrofit2.Retrofit
 

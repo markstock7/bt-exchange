@@ -1,4 +1,4 @@
-package com.blocktrending.exchange.huobipro.domain
+package com.blocktrending.exchange.okex.domain
 
 object CandlestickInterval extends Enumeration {
   type CandlestickInterval = Value

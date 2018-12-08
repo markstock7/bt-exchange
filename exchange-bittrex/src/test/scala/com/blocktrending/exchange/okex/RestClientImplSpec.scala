@@ -1,10 +1,10 @@
-package com.blocktrending.exchange.huobipro
+package com.blocktrending.exchange.okex
 
 import java.security.cert.PKIXRevocationChecker.Option
 
 import com.blocktrending.exchange.base.Status
 import com.blocktrending.exchange.base.domain.{Depth, Ticker}
-import com.blocktrending.exchange.huobipro.domain.CandlestickInterval
+import com.blocktrending.exchange.okex.domain.CandlestickInterval
 import org.scalatest._
 class RestClientImplSpec extends AsyncFlatSpec with Matchers {
 
@@ -20,12 +20,19 @@ class RestClientImplSpec extends AsyncFlatSpec with Matchers {
 
   "candles" should "return non empty results" in {
     restClient
-      .candlesWithPair("btcusdt", CandlestickInterval.DAILY, 2)
+      .candlesWithPair("BTC-CVC", CandlestickInterval.DAILY, System.currentTimeMillis().toString)
       .map { candles =>
         assert(candles.nonEmpty)
       }
   }
 
+  "tickersWithPair" should "return non empty results" in {
+    restClient
+      .tickersWithPair("BTC-CVC")
+      .map { ticker =>
+        assert(ticker.isInstanceOf[Ticker])
+      }
+  }
 
   "tickers" should "return non empty results" in {
     restClient
@@ -37,9 +44,9 @@ class RestClientImplSpec extends AsyncFlatSpec with Matchers {
 
   "depthWithPair" should "return non empty results" in {
     restClient
-      .depthsWithPair("btcusdt", "step2")
-      .map { depth =>
-        assert(depth.isInstanceOf[Depth])
+      .depthsWithPair("BTC-CVC")
+      .map { depeth =>
+        assert(depeth.isInstanceOf[Depth])
       }
   }
 }

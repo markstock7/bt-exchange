@@ -1,4 +1,4 @@
-package com.blocktrending.exchange.huobipro.domain
+package com.blocktrending.exchange.okex.domain
 
 import com.blocktrending.exchange.base.domain.{Candle, NestedSymbol, OrderBookEntry, Ticker}
 
