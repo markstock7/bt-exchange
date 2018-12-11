@@ -4,12 +4,14 @@ import java.io.{Closeable, IOException}
 
 import com.blocktrending.exchange.base.{Exchange, WebsocketClientHandle, WebsocketListenerImpl}
 import com.blocktrending.exchange.base.domain.{AggTrade, Candle, Depth, Ticker}
+import com.blocktrending.exchange.binance.domain.event.{AccountUpdateEvent, ListenKey, OrderTradeUpdateEvent}
 import okhttp3._
 import com.blocktrending.exchange.binance.json.SocketDecoders._
 
 class WebsocketClientImpl extends Closeable with WebsocketClientHandle {
 	private val client: OkHttpClient = new OkHttpClient
-	val exchange = Exchange.BINANCE
+
+	val exchange: Exchange.Value = Exchange.BINANCE
 
 	trait WebSocketCallbackImpl extends WebSocketListener {
 		override def onFailure(webSocket: WebSocket, t: Throwable, response: Response): Unit = handleFailure(webSocket, t, response)
@@ -41,13 +43,16 @@ class WebsocketClientImpl extends Closeable with WebsocketClientHandle {
 	def onTickerUpdateEvent(symbol: String)(callback: Either[Exception, Ticker] => Unit): WebSocket =
 		createNewWebSocket(s"$symbol@ticker", new WebsocketListenerImpl(callback) with WebSocketCallbackImpl)
 
-
 	def onCandleUpdateEvent(symbols: Seq[String], interval: String)(callback: Either[Exception, Candle] => Unit): WebSocket =
 		createNewCombainSocket(symbols.map(symbol => s"${symbol.toLowerCase}@kline_$interval"), new WebsocketListenerImpl(callback) with WebSocketCallbackImpl )
 
-
 	def onAllTickerUpdateEvent(callback: Either[Exception, Seq[Ticker]] => Unit): WebSocket =
 		createNewWebSocket("!ticker@arr", new WebsocketListenerImpl(callback) with WebSocketCallbackImpl )
+
+	def onUserDataUpdateEvent(
+		listenKey: ListenKey
+	)(callback: Either[Exception, Either[OrderTradeUpdateEvent, AccountUpdateEvent]] => Unit): Unit =
+		createNewWebSocket(listenKey.listenKey, new WebsocketListenerImpl(callback) with WebSocketCallbackImpl )
 
 	private def createNewWebSocket[T](channel: String, listener: WebsocketListenerImpl[T]) =
 		client.newWebSocket(
@@ -58,7 +63,6 @@ class WebsocketClientImpl extends Closeable with WebsocketClientHandle {
 		)
 
 	private def createNewCombainSocket[T](channels: Seq[String], listener: WebsocketListenerImpl[T]) = {
-		println(channels)
 		client.newWebSocket(
 			new Request.Builder()
 				.url(s"wss://stream.binance.com:9443/stream?streams=${channels.mkString("/")}")

@@ -1,17 +1,23 @@
 package com.blocktrending.exchange.binance.json
 
 import com.blocktrending.exchange.base.domain.{SimpleTicker, _}
+import com.blocktrending.exchange.binance.domain.account.{Account, NewOrderResponse, Order, Trade}
+import com.blocktrending.exchange.binance.domain.event.ListenKey
 import com.blocktrending.exchange.binance.domain.{ExchangeInfo, ServerResponse}
 import io.circe.{Decoder, HCursor}
 import io.circe.generic.semiauto.deriveDecoder
 
 object RestDecoders extends Decoders {
 
-	implicit lazy val ServerResponseDecoder:  Decoder[ServerResponse]       = deriveDecoder[ServerResponse]
-	implicit lazy val StringDecoder:          Decoder[String]               = Decoder.decodeString
-
-	implicit lazy val NestedSymbolDecoder:    Decoder[NestedSymbol]         = deriveDecoder[NestedSymbol]
-	implicit lazy val ExchangeInfoDecoder:    Decoder[ExchangeInfo]         = deriveDecoder[ExchangeInfo]
+	implicit lazy val ServerResponseDecoder:    Decoder[ServerResponse]       = deriveDecoder[ServerResponse]
+	implicit lazy val StringDecoder:            Decoder[String]               = Decoder.decodeString
+	implicit lazy val NestedSymbolDecoder:      Decoder[NestedSymbol]         = deriveDecoder[NestedSymbol]
+	implicit lazy val ExchangeInfoDecoder:      Decoder[ExchangeInfo]         = deriveDecoder[ExchangeInfo]
+	implicit lazy val AccountDecoder:           Decoder[Account]              = deriveDecoder[Account]
+	implicit lazy val NewOrderResponseDecoder:  Decoder[NewOrderResponse]     = deriveDecoder[NewOrderResponse]
+	implicit lazy val OrderDecoder:             Decoder[Order]                = deriveDecoder[Order]
+	implicit lazy val TradeDecoder:             Decoder[Trade]                = deriveDecoder[Trade]
+	implicit lazy val ListenKeyDecoder:         Decoder[ListenKey]            = deriveDecoder[ListenKey]
 
 	implicit lazy val DepthDecoder:           Decoder[Depth]                = Decoder.forProduct2(
 		"bids",

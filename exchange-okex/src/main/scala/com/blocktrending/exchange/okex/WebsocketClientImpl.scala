@@ -24,7 +24,6 @@ class WebsocketClientImpl extends Closeable with WebsocketClientHandle {
 			val text = uncompress(bytes.toByteArray)
 
 			if (text.indexOf("pong") != -1) {
-				println("Okex ping pong.")
 			} else if (text.indexOf("result") == -1) {
 				Json.parse(text).as[Seq[JsValue]].foreach { text =>
 					super.onMessage(webSocket, text.toString)

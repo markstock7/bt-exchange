@@ -28,15 +28,7 @@ class WebsocketClientImplSpec extends AsyncFlatSpec with Matchers {
 	}
 
 	"All Symbols Candle Stream" should "Working Well" in {
-		val client = new WebsocketClientImpl {
-			override def handleClosed(webSocket: WebSocket, code: Int, reason: String): Unit = {
-				println(reason)
-			}
-
-			override def handleClosing(webSocket: WebSocket, code: Int, reason: String): Unit = {
-				println(reason)
-			}
-		}
+		val client = new WebsocketClientImpl
 		restClient.symbols.flatMap { symbols =>
 			val p = Promise[Assertion]()
 			Future {
@@ -54,15 +46,7 @@ class WebsocketClientImplSpec extends AsyncFlatSpec with Matchers {
 	}
 
 	"onAllCandleUpdateEvent" should "Working Well" in {
-		val client = new WebsocketClientImpl {
-			override def handleClosed(webSocket: WebSocket, code: Int, reason: String): Unit = {
-				println(reason)
-			}
-
-			override def handleClosing(webSocket: WebSocket, code: Int, reason: String): Unit = {
-				println(reason)
-			}
-		}
+		val client = new WebsocketClientImpl
 		val p = Promise[Assertion]()
 		Future {
 			client.onCandleUpdateEvent(Seq("btcusdt"), "1h") {
