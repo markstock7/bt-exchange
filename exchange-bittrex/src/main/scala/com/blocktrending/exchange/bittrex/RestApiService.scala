@@ -1,4 +1,4 @@
-package com.blocktrending.exchange.okex
+package com.blocktrending.exchange.bittrex
 
 import okhttp3.ResponseBody
 import retrofit2.Call

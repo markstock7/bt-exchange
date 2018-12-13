@@ -1,4 +1,4 @@
-package com.blocktrending.exchange.okex.domain
+package com.blocktrending.exchange.huobipro.domain
 
 import com.blocktrending.exchange.base.domain._
 

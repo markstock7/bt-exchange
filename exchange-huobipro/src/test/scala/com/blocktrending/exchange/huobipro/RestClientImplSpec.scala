@@ -1,10 +1,10 @@
-package com.blocktrending.exchange.okex
+package com.blocktrending.exchange.huobipro
 
 import java.security.cert.PKIXRevocationChecker.Option
 
 import com.blocktrending.exchange.base.Status
 import com.blocktrending.exchange.base.domain.{Depth, Ticker}
-import com.blocktrending.exchange.okex.domain.CandlestickInterval
+import com.blocktrending.exchange.huobipro.domain.CandlestickInterval
 import org.scalatest._
 class RestClientImplSpec extends AsyncFlatSpec with Matchers {
 

@@ -1,8 +1,8 @@
-package com.blocktrending.exchange.okex.json
+package com.blocktrending.exchange.bittrex.json
 
 import io.circe.{Decoder, parser}
 import com.blocktrending.exchange.base.domain._
-import com.blocktrending.exchange.okex.domain._
+import com.blocktrending.exchange.bittrex.domain._
 import io.circe.generic.semiauto.deriveDecoder
 import java.text.SimpleDateFormat
 

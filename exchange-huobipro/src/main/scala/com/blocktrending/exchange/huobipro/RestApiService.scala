@@ -1,4 +1,4 @@
-package com.blocktrending.exchange.okex
+package com.blocktrending.exchange.huobipro
 
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -131,7 +131,7 @@ trait RestApiService {
       [7958, 1.2],
       [7955, 2.1009],
       [7954, 0.4708],
-	}**/
+  }**/
   @GET("/market/depth")
   def depthsWithPair(
       // 系统支持的交易对 格式为： btcusdt

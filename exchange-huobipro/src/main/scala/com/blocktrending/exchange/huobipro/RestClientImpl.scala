@@ -1,10 +1,10 @@
-package com.blocktrending.exchange.okex
+package com.blocktrending.exchange.huobipro
 
 import com.blocktrending.exchange.base.{IAsyncRestClient}
 import com.blocktrending.exchange.base.domain._
-import com.blocktrending.exchange.okex.domain.CandlestickInterval.CandlestickInterval
-import com.blocktrending.exchange.okex.domain._
-import com.blocktrending.exchange.okex.json.RestDecoders._
+import com.blocktrending.exchange.huobipro.domain.CandlestickInterval.CandlestickInterval
+import com.blocktrending.exchange.huobipro.domain._
+import com.blocktrending.exchange.huobipro.json.RestDecoders._
 import com.blocktrending.util.http.RunRequest
 
 import scala.concurrent.{ExecutionContext, Future}
