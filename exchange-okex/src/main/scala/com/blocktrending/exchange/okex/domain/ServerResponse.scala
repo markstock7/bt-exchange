@@ -1,1 +1,1 @@
-package com.blocktrending.exchange.okex.domain
+// package com.blocktrending.exchange.okex.domain
