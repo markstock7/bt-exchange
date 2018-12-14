@@ -33,8 +33,10 @@ trait RestApiService {
       @Query("end") end: java.lang.String
   ): Call[ResponseBody]
 
-  @GET("/v2/tickers?symbols=ALL")
-  def tickers: Call[ResponseBody]
+  @GET("/v2/tickers")
+  def tickers(
+      @Query("symbols") symbols: java.lang.String,
+  ): Call[ResponseBody]
 
   @GET("/v2/ticker/t{symbol}")
   def tickersWithPair(
@@ -50,7 +52,7 @@ trait RestApiService {
   ): Call[ResponseBody]
 
   // Precision: Level of price aggregation (P0, P1, P2, P3, P4, R0)
-  @GET("/v2/book/t{Symbol{/{Precision}")
+  @GET("/v2/book/t{Symbol}/{Precision}")
   def depthsWithPair(
       @Path("Symbol") Symbol: java.lang.String,
       @Path("Precision") Precision: java.lang.String,

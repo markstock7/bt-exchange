@@ -7,16 +7,6 @@ import io.circe.Decoder
 
 object RestDecoders extends Decoders {
 
-  // 获取交易对结果的隐式转换
-  implicit lazy val NestedSymbolDecoder: Decoder[NestedSymbol] =
-    Decoder.decodeTuple1[String].map {
-      case (pair) => {
-        pair._1.splitAt(3) match {
-          case (base, quote) => NestedSymbol(s"$base/$quote", base, quote)
-        }
-      }
-    }
-
   // candle 结果隐式转换
   implicit lazy val CandleDecoder: Decoder[Candle] =
     Decoder.decodeTuple6[Long, Double, Double, Double, Double, Double].map {

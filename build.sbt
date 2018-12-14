@@ -9,6 +9,7 @@ lazy val root =(project in file("."))
     `exchange-okex`,
     `exchange-bitfinex`,
     `exchange-bibox`,
+    `exchange-huobipro`,
     `exchange-bittrex`
   )
 

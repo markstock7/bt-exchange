@@ -20,7 +20,7 @@ class RestClientImpl(service: RestApiService)(implicit ex: ExecutionContext)
 
   def candles(pair: String, period: CandlestickInterval, size: Int): Future[Seq[Candle]] =
     RunRequest.apply1[CandleRepsonse](
-      service.candlesWithPair(pair, "30min", size)
+      service.candlesWithPair(pair, period.toString, size)
     ).map(_.result).map(candles => candles.map(_.copy(symbol = pair, interval = period.toString)))
 
   // tickers

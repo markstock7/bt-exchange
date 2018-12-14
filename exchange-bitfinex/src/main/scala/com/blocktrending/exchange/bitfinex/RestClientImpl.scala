@@ -21,9 +21,13 @@ class RestClientImpl(service: RestApiService)(implicit ex: ExecutionContext) {
   // Depths
   // DepthsWithPair
 
-  def symbols: Future[Seq[NestedSymbol]] = RunRequest.apply1[Seq[NestedSymbol]](
+  def symbols: Future[Seq[NestedSymbol]] = RunRequest.apply1[Seq[String]](
     service.symbols
-  )
+  ).map(pairs => pairs.map(pair =>
+    pair.splitAt(3) match {
+      case (base, quote) => NestedSymbol(s"$base/$quote", base, quote)
+    }))
+
 
   // 没有 一次性返回全部内容的接口，支持时间粒度会拿数据
   def candlesWithPair(
@@ -40,13 +44,15 @@ class RestClientImpl(service: RestApiService)(implicit ex: ExecutionContext) {
                     endTime.toString)
   )
 
-  def tickers: Future[Seq[Ticker]] = RunRequest.apply1[Seq[Ticker]](
-    service.tickers
+  def tickers(symbols: Seq[String]): Future[Seq[Ticker]] = RunRequest.apply1[Seq[Ticker]](
+    service.tickers(symbols.mkString(","))
   )
-
-  def tickersWithPair(pair: String): Future[Ticker] = RunRequest.apply1[Ticker](
-    service.tickersWithPair(pair)
-  )
+  
+// 因为 Tickers 和 tickersWithPair 返回的数据体不一致，没有办法使用一个decode Ticker, 所以
+  // 暂时只使用 tickers ，不使用 tickersWithPair， 后期如果需要，再实现
+//  def tickersWithPair(pair: String): Future[Ticker] = RunRequest.apply1[Ticker](
+//    service.tickersWithPair(pair)
+//  )
 
   // def trades
   // TODO 没有接口支持
