@@ -3,7 +3,7 @@ package com.blocktrending.exchange.okex
 import java.io.{Closeable, IOException}
 import java.util.logging.{Level, Logger}
 
-import com.blocktrending.exchange.base.{Exchange, WebsocketClientHandle, WebsocketListenerImpl}
+import com.blocktrending.exchange.base.{BWebSocketListener, Exchange, WebsocketClientHandle, WebsocketListenerImpl}
 import com.blocktrending.exchange.base.domain.{AggTrade, Candle, Depth, Ticker}
 import com.blocktrending.exchange.okex.domain.CandlestickInterval.CandlestickInterval
 import okhttp3._
@@ -19,7 +19,7 @@ class WebsocketClientImpl extends Closeable with WebsocketClientHandle {
 
 	Logger.getLogger(classOf[OkHttpClient].getName).setLevel(Level.FINE)
 
-	trait WebSocketCallbackImpl extends WebSocketListener {
+	trait WebSocketCallbackImpl extends BWebSocketListener {
 		override def onMessage(webSocket: WebSocket, bytes: ByteString): Unit = {
 			val text = uncompress(bytes.toByteArray)
 
@@ -36,16 +36,16 @@ class WebsocketClientImpl extends Closeable with WebsocketClientHandle {
 		override def onClosed(webSocket: WebSocket, code: Int, reason: String): Unit = handleClosed(webSocket, code, reason)
 	}
 
-	def onAllTickerUpdateEvent(symbols: Seq[String])(callback: Either[Exception, Ticker] => Unit): WebSocket =
+	def onAllTickerUpdateEvent(symbols: Seq[String])(callback: Ticker => Unit): WebSocket =
 		createNewWebSocket(tickerChannel(symbols), new WebsocketListenerImpl(callback) with WebSocketCallbackImpl )
 
-	def onAllDepthUpdateEvent(symbols: Seq[String])(callback: Either[Exception, Depth] => Unit): WebSocket =
+	def onAllDepthUpdateEvent(symbols: Seq[String])(callback: Depth => Unit): WebSocket =
 		createNewWebSocket(depthChannel(symbols), new WebsocketListenerImpl(callback) with WebSocketCallbackImpl )
 
-	def onAllTradeUpdateEvent(symbols: Seq[String])(callback: Either[Exception, AggTrade] => Unit): WebSocket =
+	def onAllTradeUpdateEvent(symbols: Seq[String])(callback: AggTrade => Unit): WebSocket =
 		createNewWebSocket(tradeChannel(symbols), new WebsocketListenerImpl(callback) with WebSocketCallbackImpl )
 
-	def onAllCandleUpdateEvent(symbols: Seq[String], interval: CandlestickInterval)(callback: Either[Exception, Candle] => Unit): WebSocket =
+	def onAllCandleUpdateEvent(symbols: Seq[String], interval: CandlestickInterval)(callback: Candle => Unit): WebSocket =
 		createNewWebSocket(candleChannel(symbols, interval), new WebsocketListenerImpl(callback) with WebSocketCallbackImpl )
 
 

@@ -12,6 +12,9 @@ trait RestApiService {
 	@GET("/api/v1/ping")
 	def ping: Call[ResponseBody]
 
+	@GET("/api/v1/ticker/allPrices")
+	def getLatestPrices: Call[ResponseBody]
+
 	@GET("api/v1/time")
 	def time: Call[ResponseBody]
 
@@ -74,9 +77,9 @@ trait RestApiService {
 	@Headers(Array("SIGNED: #"))
 	@POST("/api/v3/order") def newOrder(
 		@Query("symbol") symbol:           String,
-		@Query("side") side:               OrderSide,
-		@Query("type") `type`:             OrderType,
-		@Query("timeInForce") timeInForce: TimeInForce,
+		@Query("side") side:               String,
+		@Query("type") `type`:             String,
+		@Query("timeInForce") timeInForce: String,
 		@Query("quantity") quantity:       String,
 		@Query("price") price:             String,
 		@Query("stopPrice") stopPrice:     String,

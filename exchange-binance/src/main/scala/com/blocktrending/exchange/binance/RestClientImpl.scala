@@ -1,18 +1,20 @@
 package com.blocktrending.exchange.binance
 
 import java.lang.System.currentTimeMillis
+
 import com.blocktrending.exchange.base.{IAsyncRestClient, Status}
 import com.blocktrending.exchange.base.Status.Status
 import com.blocktrending.exchange.base.domain._
 import com.blocktrending.exchange.binance.Constants.DEFAULT_RECEIVING_WINDOW
 import com.blocktrending.exchange.binance.domain.CandlestickInterval.CandlestickInterval
+import com.blocktrending.exchange.binance.domain.account.request.{AllOrdersRequest, CancelOrderRequest, OrderRequest, OrderStatusRequest}
 import com.blocktrending.exchange.binance.domain.account.{NewOrder, Order}
 import com.blocktrending.exchange.binance.domain.event.ListenKey
+import com.blocktrending.exchange.binance.domain.market.TickerPrice
 import com.blocktrending.exchange.binance.domain.{ExchangeInfo, ServerResponse}
 import com.blocktrending.exchange.binance.json.RestDecoders._
 import com.blocktrending.util.AsJava
 import com.blocktrending.util.http.RunRequest
-import godzilla.exchange.domain.account.request.{AllOrdersRequest, CancelOrderRequest, OrderRequest, OrderStatusRequest}
 import io.circe.Decoder
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -24,6 +26,9 @@ class RestClientImpl(service: RestApiService)(implicit ex: ExecutionContext) ext
 	).map(_ => Status.OK).recover{
 		case _ => Status.NON_RESPONSE
 	}
+
+	def getAllPrices: Future[List[TickerPrice]] =
+		RunRequest.apply1[List[TickerPrice]](service.getLatestPrices)
 
 	override def symbols: Future[Seq[NestedSymbol]] = RunRequest.apply1[ExchangeInfo](
 		service.exchangeInfo
@@ -118,8 +123,8 @@ class RestClientImpl(service: RestApiService)(implicit ex: ExecutionContext) ext
 	}
 
 
-	override def newOrder(order: NewOrder): Future[Order] = {
-		RunRequest[Order](
+	def newOrder(order: NewOrder): Future[Order] = {
+		RunRequest.apply1[Order](
 			service.newOrder(
 				AsJava(order.symbol),
 				AsJava(order.side),
@@ -135,8 +140,8 @@ class RestClientImpl(service: RestApiService)(implicit ex: ExecutionContext) ext
 		)
 	}
 
-	override def getOrderStatus(in: OrderStatusRequest): Future[Order] =
-		RunRequest[Order](
+	def getOrderStatus(in: OrderStatusRequest): Future[Order] =
+		RunRequest.apply1[Order](
 			service.orderStatus(
 				AsJava(in.symbol),
 				AsJava(in.orderId),
@@ -146,8 +151,8 @@ class RestClientImpl(service: RestApiService)(implicit ex: ExecutionContext) ext
 			)
 		)
 
-	override def cancelOrder(in: CancelOrderRequest): Future[Unit] =
-		RunRequest[Unit](
+	def cancelOrder(in: CancelOrderRequest): Future[Unit] =
+		RunRequest.apply1[Unit](
 			service.cancelOrder(
 				AsJava(in.symbol),
 				AsJava(in.orderId),
@@ -158,15 +163,15 @@ class RestClientImpl(service: RestApiService)(implicit ex: ExecutionContext) ext
 			)
 		)
 
-	override def getOpenOrders(in: OrderRequest): Future[List[Order]] =
-		RunRequest[List[Order]](
+	def getOpenOrders(in: OrderRequest): Future[List[Order]] =
+		RunRequest.apply1[List[Order]](
 			service.openOrders(AsJava(in.symbol),
 				AsJava.or(in.recvWindow, DEFAULT_RECEIVING_WINDOW),
 				AsJava.or(in.timestamp, currentTimeMillis))
 		)
 
-	override def getAllOrders(in: AllOrdersRequest): Future[List[Order]] =
-		RunRequest[List[Order]](
+	def getAllOrders(in: AllOrdersRequest): Future[List[Order]] =
+		RunRequest.apply1[List[Order]](
 			service.allOrders(
 				AsJava(in.symbol),
 				AsJava(in.orderId),
@@ -177,12 +182,12 @@ class RestClientImpl(service: RestApiService)(implicit ex: ExecutionContext) ext
 		)
 
 	def startUserDataStream: Future[ListenKey] =
-			RunRequest[ListenKey](service.startUserDataStream)
+		RunRequest.apply1[ListenKey](service.startUserDataStream)
 
 	def keepAliveUserDataStream(listenKey: ListenKey): Future[Unit] =
-			RunRequest[Unit](service.keepAliveUserDataStream(listenKey.listenKey))
+		RunRequest.apply1[Unit](service.keepAliveUserDataStream(listenKey.listenKey))
 
 	def closeUserDataStream(listenKey: ListenKey): Future[Unit] =
-			RunRequest[Unit](service.closeAliveUserDataStream(listenKey.listenKey))
+		RunRequest.apply1[Unit](service.closeAliveUserDataStream(listenKey.listenKey))
 
 }

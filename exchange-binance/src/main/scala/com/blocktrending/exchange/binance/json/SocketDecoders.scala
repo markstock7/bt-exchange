@@ -48,10 +48,6 @@ object SocketDecoders extends Decoders {
 		}
 	}
 
-
-	implicit lazy val AssetBalanceDecoder: Decoder[AssetBalance] =
-		Decoder.forProduct3("a", "f", "l")(AssetBalance.apply)
-
 	implicit lazy val AccountUpdateEventDecoder: Decoder[AccountUpdateEvent] =
 		Decoder.forProduct3("e", "E", "B")(AccountUpdateEvent.apply)
 

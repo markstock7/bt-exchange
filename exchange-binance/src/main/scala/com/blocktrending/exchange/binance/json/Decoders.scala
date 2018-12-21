@@ -9,6 +9,7 @@ import com.blocktrending.exchange.binance.domain.OrderSide.OrderSide
 import com.blocktrending.exchange.binance.domain.OrderStatus.OrderStatus
 import com.blocktrending.exchange.binance.domain.OrderType.OrderType
 import com.blocktrending.exchange.binance.domain.TimeInForce.TimeInForce
+import com.blocktrending.exchange.binance.domain.market.TickerPrice
 import com.blocktrending.util.json.EnumTranscoder
 
 abstract class Decoders extends com.blocktrending.exchange.base.json.Decoders {
@@ -21,6 +22,7 @@ abstract class Decoders extends com.blocktrending.exchange.base.json.Decoders {
 	implicit lazy val TimeInForceDecoder:         Decoder[TimeInForce]         = new EnumTranscoder(TimeInForce)
 	implicit lazy val ExecutionTypeDecoder:       Decoder[ExecutionType]       = new EnumTranscoder(ExecutionType)
 	implicit lazy val OrderRejectReasonDecoder:   Decoder[OrderRejectReason]   = new EnumTranscoder(OrderRejectReason)
-
+	implicit lazy val AssetBalanceDecoder: Decoder[AssetBalance] =
+		Decoder.forProduct3("a", "f", "l")(AssetBalance.apply)
 }
 

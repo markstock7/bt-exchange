@@ -1,6 +1,7 @@
 package com.blocktrending.exchange.base
 
 import com.blocktrending.exchange.base.Exchange.Exchange
+import com.blocktrending.util.http.ParseException
 import okhttp3.{Response, WebSocket}
 
 
@@ -22,5 +23,9 @@ trait WebsocketClientHandle {
 
 	def handleClosed(webSocket: WebSocket, code: Int, reason: String): Unit = {
 		println(s"$exchange Socket hasClosed reason: $reason, code: $code")
+	}
+
+	def handleParseFailure(webSocket: WebSocket, error: ParseException): Unit = {
+		println(error.toString)
 	}
 }
