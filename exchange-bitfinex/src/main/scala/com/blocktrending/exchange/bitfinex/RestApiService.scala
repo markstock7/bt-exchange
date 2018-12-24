@@ -5,25 +5,56 @@ import retrofit2.Call
 import retrofit2.http._
 
 trait RestApiService {
+  // symbols
 
-	@GET("/symbols")
-	def symbols: Call[ResponseBody]
+  // candles
+  // candlesWithPair
 
-	@GET("/api/spot/v3/instruments/<instrument_id>/candles")
-	def candles(
-		@Path("instrument_id")   instrument_id: java.lang.String,
-		@Query("start")          start:         java.lang.String,
-		@Query("end")            end:           java.lang.String,
-		@Query("granularity")    granularity:   Integer
-	): Call[ResponseBody]
+  // Tickers
+  // TickersWithPair
 
-	@GET("/v2/candles/trade:TimeFrame:Symbol/Section")
-	def candles(
-		@Path("TimeFrame")  TimeFrame: java.lang.String,
-		@Path("Symbol")     Symbol   : java.lang.String,
-		@Path("Section")    Section  : java.lang.String,
-		@Query("limit")     limit    : java.lang.Integer,
-		@Query("start")     start    : java.lang.String,
-		@Query("end")       end      : java.lang.String
-	): Call[ResponseBody]
+  // trades
+  // tradesWithPair
+
+  // Depths
+  // DepthsWithPair
+
+  @GET("/v1/symbols")
+  def symbols: Call[ResponseBody]
+
+  // 注意，这里的symbol 要传 tBTCUSD, 前面加个小的前缀
+  // 官方没有说limit的最大取值范围
+  @GET("/v2/candles/trade:{TimeFrame}:t{Symbol}/hist")
+  def candlesWithPair(
+      @Path("TimeFrame") interval: java.lang.String,
+      @Path("Symbol") symbol: java.lang.String,
+      @Query("limit") limit: java.lang.String,
+      @Query("start") start: java.lang.String,
+      @Query("end") end: java.lang.String
+  ): Call[ResponseBody]
+
+  @GET("/v2/tickers")
+  def tickers(
+      @Query("symbols") symbols: java.lang.String,
+  ): Call[ResponseBody]
+
+  @GET("/v2/ticker/t{symbol}")
+  def tickersWithPair(
+      @Path("symbol") symbol: java.lang.String,
+  ): Call[ResponseBody]
+
+  @GET("/v2/trades/t{symbol}/hist")
+  def tradesWithPair(
+      @Path("symbol") symbol: java.lang.String,
+      @Query("limit") limit: java.lang.String,
+      @Query("start") start: java.lang.String,
+      @Query("end") end: java.lang.String
+  ): Call[ResponseBody]
+
+  // Precision: Level of price aggregation (P0, P1, P2, P3, P4, R0)
+  @GET("/v2/book/t{Symbol}/{Precision}")
+  def depthsWithPair(
+      @Path("Symbol") Symbol: java.lang.String,
+      @Path("Precision") Precision: java.lang.String,
+  ): Call[ResponseBody]
 }

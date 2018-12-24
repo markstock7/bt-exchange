@@ -6,6 +6,6 @@ import com.blocktrending.exchange.base.domain.NestedSymbol
 import scala.concurrent.Future
 
 trait IAsyncRestClient {
-	def ping: Future[Status]
+//	def ping: Future[Status]
 	def symbols: Future[Seq[NestedSymbol]]
 }

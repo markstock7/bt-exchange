@@ -13,6 +13,11 @@ object RestDecoders extends Decoders {
 	implicit lazy val NestedSymbolDecoder:    Decoder[NestedSymbol]         = deriveDecoder[NestedSymbol]
 	implicit lazy val ExchangeInfoDecoder:    Decoder[ExchangeInfo]         = deriveDecoder[ExchangeInfo]
 
+	override implicit lazy val OrderBookEntryDecoder: Decoder[OrderBookEntry] =
+		Decoder.decodeTuple1[BigDecimal].map {
+			case (a0) => OrderBookEntry(a0._1, 1)
+		}
+
 	implicit lazy val DepthDecoder:           Decoder[Depth]                = Decoder.forProduct2(
 		"bids",
 		"asks"

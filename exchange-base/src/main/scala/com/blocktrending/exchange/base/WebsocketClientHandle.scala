@@ -13,7 +13,7 @@ trait WebsocketClientHandle {
 	}
 
 	def handleOpen(webSocket: WebSocket, response: Response): Unit = {
-
+		println(s"$exchange Socket is openging")
 	}
 
 	def handleFailure(webSocket: WebSocket, t: Throwable, response: Response): Unit = {

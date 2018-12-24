@@ -21,9 +21,21 @@ object CandlestickInterval extends Enumeration {
 
 	def interval2Period(interval: CandlestickInterval): Long = {
 		interval match {
+			case ONE_MINUTE => 60 * 1000
+			case THREE_MINUTES => 3 * 60 * 1000
 			case FIVE_MINUTES => 5 * 60 * 1000
+			case FIFTEEN_MINUTES => 15 * 60 * 1000
+			case HALF_HOURLY => 30 * 60 * 1000
 			case HOURLY => 60 * 60 * 1000
+			case TWO_HOURLY => 2 * 60 * 60 * 1000
+			case FOUR_HOURLY => 4 * 60 * 60 * 1000
+			case SIX_HOURLY => 6 * 60 * 60 * 1000
+			case EIGHT_HOURLY => 8 * 60 * 60 * 1000
+			case TWELEVE_HOURLY => 12 * 60 * 60 * 1000
 			case DAILY => 24 * 60 * 60 * 1000
+			case THREE_DAY => 3 * 24 * 60 * 60 * 1000
+			case WEEKLY => 7 * 24 * 60 * 60 * 1000
+			case MONTHLY => 30 * 24 * 60 * 60 * 1000
 		}
 	}
 }

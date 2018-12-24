@@ -24,7 +24,7 @@ class RestClientImpl(service: RestApiService)(implicit ex: ExecutionContext) ext
 		service.exchangeInfo
 	).map(_.symbols)
 
-	def depth(
+	def depthsWithPair(
 		symbol: String,
 		limit: Option[Int]
 	): Future[Depth] = RunRequest.apply1[Depth](
@@ -47,7 +47,7 @@ class RestClientImpl(service: RestApiService)(implicit ex: ExecutionContext) ext
 		)
 	}
 
-	def trades(
+	def tradesWithPair(
 		symbol: String,
 		limit: Option[Int] = None
 	): Future[Seq[AggTrade]] = Trades.trades(symbol, limit)
@@ -102,26 +102,25 @@ class RestClientImpl(service: RestApiService)(implicit ex: ExecutionContext) ext
 		)
 	).map(candles => candles.map(_.copy(symbol = symbol, interval = interval.toString)))
 
-	def ticker24hr(
+	def tickersWithPair(
 		symbol:      String
 	): Future[Ticker] = RunRequest.apply1[Ticker](
 		service.ticker24hr(AsJava(symbol))
 	)
 
-	def ticker24hr: Future[Seq[Ticker]] = RunRequest.apply1[Seq[Ticker]] {
+	def tickers: Future[Seq[Ticker]] = RunRequest.apply1[Seq[Ticker]] {
 		val symbol: Option[String] = None
 		service.ticker24hr(AsJava(symbol))
 	}
 
-	def tickerPrice(
-		symbol:     String
-	): Future[SimpleTicker] = RunRequest.apply1[SimpleTicker](
-		service.tickerPrice(AsJava(symbol))
-	)
-
-	def tickerPrice: Future[Seq[SimpleTicker]] = RunRequest.apply1[Seq[SimpleTicker]] {
-		val symbol: Option[String] = None
-		service.tickerPrice(AsJava(symbol))
-	}
-
+//	def tickerPrice(
+//		symbol:     String
+//	): Future[SimpleTicker] = RunRequest.apply1[SimpleTicker](
+//		service.tickerPrice(AsJava(symbol))
+//	)
+//
+//	def tickerPrice: Future[Seq[SimpleTicker]] = RunRequest.apply1[Seq[SimpleTicker]] {
+//		val symbol: Option[String] = None
+//		service.tickerPrice(AsJava(symbol))
+//	}
 }
