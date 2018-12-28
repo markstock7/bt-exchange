@@ -4,10 +4,6 @@ import com.blocktrending.util.http.ParseException
 import io.circe._
 import okhttp3.{WebSocket, WebSocketListener}
 
-trait BWebSocketListener extends WebSocketListener {
-	def onParseFailure(webSocket: WebSocket, error: ParseException): Unit = println(error.toString)
-}
-
 class WebsocketListenerImpl[T: Decoder](var callback: T => Unit) extends BWebSocketListener {
 	override def onMessage(webSocket: WebSocket, text: String): Unit =
 		parser.decode[T](text) match {
